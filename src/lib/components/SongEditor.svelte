@@ -6,7 +6,7 @@
 	import LevelStepper from './LevelStepper.svelte';
 	import ThemeToggle from './ThemeToggle.svelte';
 	import { EditorState } from '$lib/state/editor.svelte';
-	import { announce, prefs, savePrefs, showToast } from '$lib/state/app.svelte';
+	import { announce, INSTRUMENT_NAMES, prefs, savePrefs, showToast } from '$lib/state/app.svelte';
 	import {
 		addSection,
 		adjustLevel,
@@ -286,6 +286,15 @@
 					<input type="checkbox" bind:checked={prefs.showNumerals} onchange={savePrefs} />
 					<span>Roman numerals</span>
 				</label>
+				<div class="inline-field shapes">
+					<label class="check">
+						<input type="checkbox" bind:checked={prefs.showShapes} onchange={savePrefs} />
+						<span>Show chords on</span>
+					</label>
+					<select class="input" aria-label="Instrument" bind:value={prefs.instrument} onchange={savePrefs}>
+						{#each Object.entries(INSTRUMENT_NAMES) as [id, name] (id)}<option value={id}>{name}</option>{/each}
+					</select>
+				</div>
 			</div>
 			<LevelStepper
 				label="Whole song"
@@ -438,6 +447,9 @@
 	}
 	.bpm {
 		width: 5.5em;
+	}
+	.shapes {
+		font-weight: inherit;
 	}
 	.check {
 		display: flex;

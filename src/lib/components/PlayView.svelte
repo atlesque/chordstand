@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import Icon from './Icon.svelte';
 	import ThemeToggle from './ThemeToggle.svelte';
+	import ChordDiagram from './ChordDiagram.svelte';
 	import { colorOf } from '$lib/engine/data';
 	import { renderSection, songTonalityLabel } from '$lib/engine/song';
 	import { prefs, savePrefs } from '$lib/state/app.svelte';
@@ -189,6 +190,7 @@
 									<span class="visually-hidden">{c.chord.spoken}</span>
 									<span aria-hidden="true">{c.chord.symbol}</span>
 									{#if prefs.showNumerals}<span class="num" aria-hidden="true">{c.chord.numeral}</span>{/if}
+									{#if prefs.showShapes}<ChordDiagram chord={c.chord} instrument={prefs.instrument} size="sm" />{/if}
 								</span>
 							{/each}
 						</li>
@@ -347,6 +349,9 @@
 		letter-spacing: -0.02em;
 		line-height: 1.1;
 		overflow-wrap: anywhere;
+	}
+	.chord :global(.dia) {
+		margin-top: 6px;
 	}
 	.num {
 		font-size: 0.875rem;

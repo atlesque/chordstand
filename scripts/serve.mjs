@@ -1,4 +1,4 @@
-// Serves build/ the way Cloudflare Pages will: headers from _headers and the SPA fallback.
+// Serves build/ the way Cloudflare will: headers from _headers and the SPA fallback.
 // Used by `npm run preview`, the Playwright tests and Lighthouse CI.
 import { createServer } from 'node:http';
 import { existsSync, readFileSync, statSync } from 'node:fs';
@@ -49,7 +49,7 @@ createServer((req, res) => {
 	}
 	if (existsSync(file) && statSync(file).isDirectory()) file = join(file, 'index.html');
 	if (!existsSync(file)) {
-		file = join(root, 'index.html'); // _redirects: /* /index.html 200
+		file = join(root, 'index.html'); // SPA fallback (wrangler.jsonc not_found_handling)
 		path = '/index.html';
 	}
 	const headers = { 'Content-Type': types[extname(file)] ?? 'application/octet-stream' };

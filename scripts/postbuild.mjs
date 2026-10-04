@@ -1,4 +1,4 @@
-// Writes build/_headers for Cloudflare Pages: caching rules plus a strict CSP.
+// Writes build/_headers for Cloudflare (Workers static assets): caching rules plus a strict CSP.
 // The CSP allows only our own scripts, plus the exact inline scripts in index.html (by hash),
 // so it is regenerated on every build.
 import { createHash } from 'node:crypto';

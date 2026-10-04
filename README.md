@@ -25,7 +25,7 @@ npm run check      # svelte-check + TypeScript
 npm test           # Vitest unit tests (engine, storage)
 npm run build      # static build in build/ (+ build/_headers with CSP hashes)
 npm run size       # first-load JS/CSS budget check (50 KB / 10 KB gzip)
-npm run preview    # serve build/ like Cloudflare Pages (headers + SPA fallback)
+npm run preview    # serve build/ like Cloudflare (headers + SPA fallback)
 npm run test:e2e   # Playwright + axe on a phone viewport (needs a build)
 ```
 
@@ -42,7 +42,7 @@ src/
   data/styles/     one JSON file per style: progression pools (add a file to add a style)
   data/            moods, forms, section labels, fixed patterns (12-bar blues)
   routes/          / (library), /new, /song/[id], /song/[id]/play, /s (shared link)
-static/            icons, manifest, _redirects
+static/            icons, manifest
 scripts/           postbuild (_headers + CSP), serve, size budget, icons
 tests/unit         Vitest
 tests/e2e          Playwright + @axe-core/playwright
@@ -60,15 +60,16 @@ Drop a JSON file into `src/data/styles/`. Each pool entry has `degrees` (one Rom
 
 `schemaVersion` plus a migration per version bump lives in `src/lib/storage/schema.ts`. When storage is blocked or full, the app keeps working in memory and says so.
 
-## Hosting on Cloudflare Pages
+## Hosting on Cloudflare Workers (static assets)
 
-Connect the repo in Cloudflare Pages with:
+The `chordstand` Worker serves `build/` as static assets, configured in `wrangler.jsonc` (no Worker script). In the Worker's Settings → Build, connect the GitHub repo with:
 
 - Build command: `npm run build`
-- Build output directory: `build`
-- Environment variable: `NODE_VERSION=22`
+- Deploy command: `npx wrangler deploy`
+- Production branch: `main`
+- Build variable: `NODE_VERSION=22`
 
-Every PR gets a preview URL and `main` deploys to production. `static/_redirects` provides the SPA fallback; the build writes `build/_headers` with long-term caching for hashed assets, `no-cache` for `index.html` and the service worker, and a strict Content-Security-Policy (inline scripts allowed by hash only), `Referrer-Policy` and `Permissions-Policy`. No Functions, KV or D1 are used.
+`not_found_handling: "single-page-application"` serves `index.html` for app routes like `/song/<id>`. The build writes `build/_headers` with long-term caching for hashed assets, `no-cache` for `index.html` and the service worker, and a strict Content-Security-Policy (inline scripts allowed by hash only), `Referrer-Policy` and `Permissions-Policy`. No Functions, KV or D1 are used.
 
 ## CI
 

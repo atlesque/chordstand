@@ -1,0 +1,22 @@
+{
+  "id": "blues",
+  "name": "Blues",
+  "bpm": [70, 120],
+  "dominantMajors": true,
+  "minLevel": 2,
+  "tonicLanding": true,
+  "substitutions": { "secondaryDominants": true },
+  "pool": [
+    { "degrees": ["I", "IV", "I", "V"], "weight": 5, "tonality": "major", "roles": ["verse", "chorus", "intro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["I", "I", "IV", "I"], "weight": 4, "tonality": "major", "roles": ["verse"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["IV", "IV", "I", "I"], "weight": 4, "tonality": "major", "roles": ["chorus", "bridge"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["V", "IV", "I", "V"], "weight": 4, "tonality": "major", "roles": ["chorus", "outro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["VI", "II", "V", "I"], "weight": 2, "tonality": "major", "roles": ["bridge"], "moods": ["*"], "minComplexity": 3 },
+    { "degrees": ["I", "bVII", "IV", "I"], "weight": 2, "tonality": "major", "roles": ["verse", "bridge"], "moods": ["*"], "minComplexity": 2 },
+    { "degrees": ["IV", "V", "I", "I"], "weight": 2, "tonality": "major", "roles": ["outro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["i", "iv", "i", "V"], "weight": 5, "tonality": "minor", "roles": ["verse", "chorus", "intro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["iv", "iv", "i", "i"], "weight": 4, "tonality": "minor", "roles": ["chorus", "bridge"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["bVI", "V", "i", "i"], "weight": 4, "tonality": "minor", "roles": ["chorus", "outro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["i", "bVII", "bVI", "V"], "weight": 3, "tonality": "minor", "roles": ["verse", "bridge"], "moods": ["*"], "minComplexity": 2 }
+  ]
+}

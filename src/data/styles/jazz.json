@@ -1,0 +1,24 @@
+{
+  "id": "jazz",
+  "name": "Jazz",
+  "bpm": [100, 160],
+  "minLevel": 2,
+  "tonicLanding": false,
+  "substitutions": { "secondaryDominants": true, "tritone": true },
+  "pool": [
+    { "degrees": ["ii", "V", "I", "I"], "weight": 6, "tonality": "major", "roles": ["verse", "chorus", "intro", "outro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["I", "vi", "ii", "V"], "weight": 5, "tonality": "major", "roles": ["verse", "chorus", "intro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["iii", "vi", "ii", "V"], "weight": 4, "tonality": "major", "roles": ["verse", "bridge"], "moods": ["*"], "minComplexity": 2 },
+    { "degrees": ["I", "IV", "iii", "vi", "ii", "V", "I", "I"], "weight": 3, "tonality": "major", "roles": ["verse", "chorus"], "moods": ["*"], "minComplexity": 2 },
+    { "degrees": ["IV", "iv", "iii", "VI", "ii", "V", "I", "I"], "weight": 2, "tonality": "major", "roles": ["bridge", "chorus"], "moods": ["*"], "minComplexity": 3 },
+    { "degrees": ["III", "III", "VI", "VI", "II", "II", "V", "V"], "weight": 3, "tonality": "major", "roles": ["bridge"], "moods": ["*"], "minComplexity": 2 },
+    { "degrees": ["I", "VI", "ii", "V"], "weight": 2, "tonality": "major", "roles": ["verse", "chorus"], "moods": ["happy", "uplifting"], "minComplexity": 2 },
+    { "degrees": ["I", "II", "ii", "V"], "weight": 2, "tonality": "major", "modes": ["lydian"], "roles": ["verse"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["ii°", "V", "i", "i"], "weight": 6, "tonality": "minor", "roles": ["verse", "chorus", "intro", "outro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["i", "iv", "ii°", "V"], "weight": 4, "tonality": "minor", "roles": ["verse", "chorus"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["i", "bVI", "ii°", "V"], "weight": 3, "tonality": "minor", "roles": ["verse", "bridge"], "moods": ["*"], "minComplexity": 2 },
+    { "degrees": ["iv", "bVII", "bIII", "bVI", "ii°", "V", "i", "i"], "weight": 3, "tonality": "minor", "roles": ["bridge", "chorus"], "moods": ["*"], "minComplexity": 2 },
+    { "degrees": ["i", "IV", "i", "IV"], "weight": 3, "tonality": "minor", "modes": ["dorian"], "roles": ["verse", "chorus"], "moods": ["*"], "minComplexity": 1 }
+  ],
+  "families": { "VI": "dom", "III": "dom", "II": "dom", "IV": "maj" }
+}

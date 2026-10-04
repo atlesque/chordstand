@@ -1,0 +1,8 @@
+{
+  "happy":       { "name": "Happy",       "modes": { "major": 4, "mixolydian": 1 },            "bpm": [104, 128], "levelBias": 0 },
+  "melancholic": { "name": "Melancholic", "modes": { "minor": 3, "dorian": 2 },                "bpm": [66, 88],   "levelBias": 0 },
+  "dreamy":      { "name": "Dreamy",      "modes": { "lydian": 2, "major": 2 },                "bpm": [70, 92],   "levelBias": 1 },
+  "tense":       { "name": "Tense",       "modes": { "minor": 4, "dorian": 1 },                "bpm": [92, 120],  "levelBias": 0 },
+  "uplifting":   { "name": "Uplifting",   "modes": { "major": 4, "mixolydian": 1, "lydian": 1 }, "bpm": [96, 124], "levelBias": 0 },
+  "calm":        { "name": "Calm",        "modes": { "major": 3, "lydian": 1, "dorian": 1 },   "bpm": [60, 80],   "levelBias": 0 }
+}

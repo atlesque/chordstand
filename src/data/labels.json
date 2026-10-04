@@ -1,0 +1,9 @@
+{
+  "Intro":  { "role": "intro",  "color": "intro" },
+  "Verse":  { "role": "verse",  "color": "verse" },
+  "Chorus": { "role": "chorus", "color": "chorus" },
+  "Bridge": { "role": "bridge", "color": "bridge" },
+  "Outro":  { "role": "outro",  "color": "outro" },
+  "A":      { "role": "verse",  "color": "a" },
+  "B":      { "role": "bridge", "color": "b" }
+}

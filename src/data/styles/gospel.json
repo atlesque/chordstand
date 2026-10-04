@@ -1,0 +1,23 @@
+{
+  "id": "gospel",
+  "name": "Gospel",
+  "bpm": [66, 100],
+  "minLevel": 2,
+  "tonicLanding": true,
+  "substitutions": { "secondaryDominants": true, "borrowedIv": true },
+  "pool": [
+    { "degrees": ["I", "IV", "I", "V"], "weight": 4, "tonality": "major", "roles": ["verse", "intro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["IV", "V", "iii", "vi"], "weight": 4, "tonality": "major", "roles": ["chorus", "verse"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["I", "iii", "IV", "iv"], "weight": 3, "tonality": "major", "roles": ["verse", "bridge"], "moods": ["*"], "minComplexity": 2 },
+    { "degrees": ["IV", "V", "I", "vi", "ii", "V", "I", "I"], "weight": 4, "tonality": "major", "roles": ["chorus"], "moods": ["*"], "minComplexity": 2 },
+    { "degrees": ["I", "III", "vi", "IV", "I", "V", "I", "I"], "weight": 3, "tonality": "major", "roles": ["verse", "chorus"], "moods": ["*"], "minComplexity": 3 },
+    { "degrees": ["IV", "iv", "iii", "VI", "ii", "V", "I", "I"], "weight": 3, "tonality": "major", "roles": ["bridge", "outro"], "moods": ["*"], "minComplexity": 3 },
+    { "degrees": ["vi", "V", "IV", "I"], "weight": 3, "tonality": "major", "roles": ["bridge"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["IV", "V", "I", "I"], "weight": 3, "tonality": "major", "roles": ["outro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["i", "iv", "bVII", "bIII"], "weight": 4, "tonality": "minor", "roles": ["verse", "chorus"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["bVI", "bVII", "i", "i"], "weight": 4, "tonality": "minor", "roles": ["chorus", "outro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["iv", "v", "bVI", "V"], "weight": 3, "tonality": "minor", "roles": ["bridge"], "moods": ["*"], "minComplexity": 2 },
+    { "degrees": ["i", "IV", "i", "IV"], "weight": 3, "tonality": "minor", "modes": ["dorian"], "roles": ["verse"], "moods": ["*"], "minComplexity": 1 }
+  ],
+  "families": { "III": "dom", "VI": "dom" }
+}

@@ -251,7 +251,7 @@
 			<p class="notice warn" role="alert">{editor.saveError}</p>
 		{/if}
 
-		<section class="song-bar card" aria-label="Song settings">
+		<section class="song-bar card rise" aria-label="Song settings">
 			<p class="facts">
 				<span>{STYLES[song.settings.style]?.name ?? song.settings.style}</span>
 				<span aria-hidden="true">·</span>
@@ -328,8 +328,8 @@
 			{/each}
 		</ol>
 
-		<section class="extend card" aria-labelledby="extend-title">
-			<h2 id="extend-title" class="small-title">Extend</h2>
+		<section class="extend card rise" aria-labelledby="extend-title">
+			<h2 id="extend-title" class="small-title display">Extend</h2>
 			<div class="row">
 				<label class="visually-hidden" for="add-section">Section to add</label>
 				<select id="add-section" class="input grow" bind:value={addChoice}>
@@ -390,15 +390,20 @@
 		border: 1px solid transparent;
 		border-radius: var(--radius);
 		background: transparent;
-		font-size: 1.25rem;
-		font-weight: 700;
+		font-family: var(--display);
+		font-size: 1.5rem;
+		font-weight: 600;
+		letter-spacing: -0.01em;
 		padding: 0 8px;
 		text-overflow: ellipsis;
+		transition:
+			background-color 0.2s,
+			border-color 0.2s;
 	}
 	.title-input:hover,
 	.title-input:focus {
 		border-color: var(--border);
-		background: var(--surface);
+		background: var(--field);
 	}
 	.song-bar {
 		padding: 12px;
@@ -406,13 +411,18 @@
 		flex-direction: column;
 		gap: 12px;
 		margin: 8px 0 16px;
+		padding: 16px;
 	}
 	.facts {
 		margin: 0;
 		display: flex;
 		flex-wrap: wrap;
-		gap: 6px;
-		font-weight: 600;
+		gap: 8px;
+		font-size: 0.75rem;
+		font-weight: 700;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--muted);
 	}
 	.settings-row {
 		display: flex;
@@ -455,13 +465,13 @@
 	}
 	.extend {
 		margin-top: 16px;
-		padding: 12px;
+		padding: 16px;
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
 	}
 	.small-title {
-		font-size: 1rem;
+		font-size: 1.25rem;
 	}
 	.row {
 		display: flex;

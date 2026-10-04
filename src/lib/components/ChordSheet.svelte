@@ -101,11 +101,30 @@
 		right: 0;
 		bottom: 0;
 		z-index: 40;
-		background: var(--bg);
+		background: color-mix(in srgb, var(--bg) 80%, transparent);
 		border-top: 1px solid var(--border);
-		border-radius: 16px 16px 0 0;
-		box-shadow: 0 -8px 32px rgb(0 0 0 / 0.2);
+		border-radius: 24px 24px 0 0;
+		box-shadow:
+			0 -16px 48px -12px rgb(0 0 0 / 0.3),
+			inset 0 1px 0 var(--hi);
+		backdrop-filter: var(--glass);
+		-webkit-backdrop-filter: var(--glass);
 		padding: 12px 16px calc(16px + var(--safe-bottom));
+		animation: sheet-in 0.45s var(--ease);
+	}
+	@keyframes sheet-in {
+		from {
+			transform: translateY(100%);
+		}
+	}
+	.sheet::before {
+		content: '';
+		display: block;
+		width: 40px;
+		height: 4px;
+		margin: -4px auto 8px;
+		border-radius: 2px;
+		background: var(--border);
 	}
 	.inner {
 		max-width: 560px;
@@ -120,13 +139,17 @@
 		align-items: flex-start;
 	}
 	h2 .sym {
-		font-size: 2.25rem;
+		font-size: 2.5rem;
+		font-weight: 800;
+		letter-spacing: -0.02em;
 	}
 	p {
 		margin: 0;
 	}
 	.alt-title {
-		font-size: 0.9375rem;
+		font-size: 0.75rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
 		color: var(--muted);
 	}
 	.alts {

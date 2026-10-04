@@ -17,7 +17,16 @@ export const test = base.extend<{ errors: string[] }>({
 
 export { expect };
 
+/** Waits for entrance animations and page transitions to finish (the ambient background loops forever, so it's skipped). */
+export async function settle(page: Page) {
+	await page.waitForFunction(() =>
+		document.getAnimations().every((a) => a.playState !== 'running' || a.effect?.getTiming().iterations === Infinity)
+	);
+}
+
 export async function expectAccessible(page: Page) {
+	// Mid-fade text would be measured at partial opacity.
+	await settle(page);
 	const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
 	const summary = results.violations.map((v) => `${v.id}: ${v.help} (${v.nodes.map((n) => n.target.join(' ')).join(', ')})`);
 	expect(summary).toEqual([]);
@@ -31,4 +40,5 @@ export async function createSong(page: Page, seed = '42') {
 	await page.getByRole('button', { name: 'Generate' }).click();
 	await expect(page).toHaveURL(/\/song\/[\w-]+$/);
 	await expect(page.locator('[data-section-index]')).toHaveCount(6);
+	await settle(page);
 }

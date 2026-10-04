@@ -10,7 +10,7 @@ export default defineConfig({
 			injectRegister: false,
 			manifest: false, // static/manifest.webmanifest is the source of truth
 			workbox: {
-				globPatterns: ['**/*.{js,css,html,svg,png,webmanifest}'],
+				globPatterns: ['**/*.{js,css,html,svg,png,webmanifest,woff2}'],
 				navigateFallback: '/index.html',
 				navigateFallbackDenylist: [/^\/sw\.js$/, /^\/workbox-/]
 			},

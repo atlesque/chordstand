@@ -1,0 +1,21 @@
+{
+  "id": "lofi",
+  "name": "Lo-fi",
+  "bpm": [70, 90],
+  "minLevel": 2,
+  "tonicLanding": false,
+  "substitutions": { "secondaryDominants": true },
+  "pool": [
+    { "degrees": ["ii", "V", "I", "vi"], "weight": 5, "tonality": "major", "roles": ["verse", "chorus", "intro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["IV", "iii", "ii", "I"], "weight": 4, "tonality": "major", "roles": ["verse", "bridge"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["I", "vi", "ii", "V"], "weight": 4, "tonality": "major", "roles": ["verse", "chorus"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["IV", "iv", "iii", "vi"], "weight": 3, "tonality": "major", "roles": ["chorus", "bridge"], "moods": ["*"], "minComplexity": 2 },
+    { "degrees": ["I", "II", "IV", "iv"], "weight": 3, "tonality": "major", "modes": ["lydian"], "roles": ["verse", "chorus"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["IV", "V", "iii", "vi"], "weight": 3, "tonality": "major", "roles": ["chorus"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["i", "iv", "bVII", "bIII"], "weight": 5, "tonality": "minor", "roles": ["verse", "chorus", "intro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["i", "bVI", "iv", "v"], "weight": 4, "tonality": "minor", "roles": ["verse", "bridge"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["iv", "v", "i", "i"], "weight": 3, "tonality": "minor", "roles": ["chorus", "outro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["i", "IV", "bVII", "bIII"], "weight": 3, "tonality": "minor", "modes": ["dorian"], "roles": ["verse", "chorus"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["IV", "iv", "I", "I"], "weight": 2, "tonality": "major", "roles": ["outro"], "moods": ["*"], "minComplexity": 1 }
+  ]
+}

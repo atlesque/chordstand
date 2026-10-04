@@ -1,0 +1,21 @@
+{
+  "id": "folk",
+  "name": "Folk",
+  "bpm": [84, 116],
+  "maxLevel": 3,
+  "tonicLanding": true,
+  "substitutions": {},
+  "pool": [
+    { "degrees": ["I", "IV", "I", "V"], "weight": 5, "tonality": "major", "roles": ["verse", "intro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["I", "V", "IV", "I"], "weight": 4, "tonality": "major", "roles": ["verse", "chorus"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["IV", "I", "V", "I"], "weight": 4, "tonality": "major", "roles": ["chorus", "outro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["vi", "IV", "I", "V"], "weight": 3, "tonality": "major", "roles": ["bridge", "chorus"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["I", "ii", "IV", "I"], "weight": 2, "tonality": "major", "roles": ["verse", "bridge"], "moods": ["calm", "happy"], "minComplexity": 2 },
+    { "degrees": ["I", "bVII", "IV", "I"], "weight": 3, "tonality": "major", "modes": ["mixolydian"], "roles": ["verse", "chorus"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["i", "bVII", "i", "bVII"], "weight": 4, "tonality": "minor", "roles": ["verse", "intro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["i", "bIII", "bVII", "i"], "weight": 4, "tonality": "minor", "roles": ["verse", "chorus"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["bVI", "bVII", "i", "i"], "weight": 3, "tonality": "minor", "roles": ["chorus", "outro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["iv", "i", "v", "i"], "weight": 3, "tonality": "minor", "roles": ["bridge"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["i", "IV", "i", "bVII"], "weight": 3, "tonality": "minor", "modes": ["dorian"], "roles": ["verse", "chorus"], "moods": ["*"], "minComplexity": 1 }
+  ]
+}

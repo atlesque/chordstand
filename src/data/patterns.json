@@ -1,0 +1,13 @@
+{
+  "blues12": {
+    "major": [
+      { "degrees": ["I", "I", "I", "I", "IV", "IV", "I", "I", "V", "IV", "I", "V"], "weight": 3, "minComplexity": 1 },
+      { "degrees": ["I", "IV", "I", "I", "IV", "IV", "I", "I", "V", "IV", "I", "V"], "weight": 3, "minComplexity": 2 },
+      { "degrees": ["I", "IV", "I", "I", "IV", "#iv°", "I", "VI", "ii", "V", "I VI", "ii V"], "weight": 2, "minComplexity": 4 }
+    ],
+    "minor": [
+      { "degrees": ["i", "i", "i", "i", "iv", "iv", "i", "i", "bVI", "V", "i", "V"], "weight": 3, "minComplexity": 1 },
+      { "degrees": ["i", "iv", "i", "i", "iv", "iv", "i", "i", "bVI", "V", "i iv", "i V"], "weight": 2, "minComplexity": 3 }
+    ]
+  }
+}

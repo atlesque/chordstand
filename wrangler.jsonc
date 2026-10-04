@@ -1,0 +1,14 @@
+// Cloudflare Workers static assets: the build/ folder is served as-is, no Worker script.
+// _headers in build/ (written by scripts/postbuild.mjs) sets caching and the CSP.
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "chordstand",
+	"compatibility_date": "2026-10-04",
+	"assets": {
+		"directory": "./build",
+		// Unknown paths (/new, /song/:id, /s) get index.html with 200, so the SPA router takes over.
+		"not_found_handling": "single-page-application"
+	},
+	// Required by `wrangler preview`, which Workers Builds runs for PR preview deployments.
+	"previews": {}
+}

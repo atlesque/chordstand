@@ -1,6 +1,6 @@
 import { browser } from '$app/environment';
 import { DEFAULT_SETUP } from '$lib/engine/defaults';
-import type { SetupChoices } from '$lib/engine/types';
+import type { Instrument, SetupChoices } from '$lib/engine/types';
 
 // App-wide UI state. Deliberately free of engine and storage imports so the shell stays small.
 
@@ -13,8 +13,13 @@ export type Prefs = {
 	wakeLock: boolean;
 	showNumerals: boolean;
 	autoAdvance: boolean;
+	instrument: Instrument;
+	/** Draw each chord on `instrument` (piano keys, guitar shape, violin fingering). */
+	showShapes: boolean;
 	lastSetup: SetupChoices;
 };
+
+export const INSTRUMENT_NAMES: Record<Instrument, string> = { piano: 'Piano', guitar: 'Guitar', violin: 'Violin' };
 
 export const PREFS_KEY = 'chordstand:v1:prefs';
 
@@ -23,6 +28,8 @@ export const DEFAULT_PREFS: Prefs = {
 	wakeLock: true,
 	showNumerals: false,
 	autoAdvance: false,
+	instrument: 'piano',
+	showShapes: false,
 	lastSetup: DEFAULT_SETUP
 };
 
@@ -31,7 +38,8 @@ function loadPrefs(): Prefs {
 	try {
 		const parsed = JSON.parse(localStorage.getItem(PREFS_KEY) ?? '{}');
 		if (!parsed || typeof parsed !== 'object') return DEFAULT_PREFS;
-		return { ...DEFAULT_PREFS, ...parsed, lastSetup: { ...DEFAULT_SETUP, ...parsed.lastSetup } };
+		const instrument = Object.hasOwn(INSTRUMENT_NAMES, parsed.instrument ?? '') ? parsed.instrument : DEFAULT_PREFS.instrument;
+		return { ...DEFAULT_PREFS, ...parsed, instrument, lastSetup: { ...DEFAULT_SETUP, ...parsed.lastSetup } };
 	} catch {
 		return DEFAULT_PREFS;
 	}

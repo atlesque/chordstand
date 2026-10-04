@@ -36,6 +36,11 @@ test('reorder with buttons, undo, redo and announcements', async ({ page }) => {
 
 test('drag to reorder', async ({ page }) => {
 	await createSong(page);
+	// Start from the same spot whatever sits above the sections, so the drag path doesn't depend on it.
+	await page.evaluate(() => {
+		const top = document.querySelector('[data-section-index="0"]')!.getBoundingClientRect().top;
+		window.scrollBy(0, top - 300);
+	});
 	const handle = page.locator('[data-section-index="0"] .handle');
 	const target = page.locator('[data-section-index="2"]');
 	const hb = (await handle.boundingBox())!;
@@ -140,6 +145,29 @@ test('play view: large chords, tap and keys move between sections @a11y', async 
 	await expect(page.getByText('Chorus, section 2 of 6')).toBeVisible();
 	await page.mouse.click(vw * 0.8, 400);
 	await expect(page.getByText('Verse, section 3 of 6')).toBeVisible();
+});
+
+test('chords drawn on the chosen instrument, in the editor and play view @a11y', async ({ page }) => {
+	await createSong(page);
+	await expect(page.getByRole('img', { name: /^Piano keys/ })).toHaveCount(0);
+	await page.getByLabel('Instrument').selectOption('guitar');
+	await page.getByLabel('Show chords on').check();
+
+	await page.locator('.chip').first().click();
+	const sheet = page.getByRole('dialog');
+	await expect(sheet.getByRole('img', { name: /^Guitar, low string to high: / })).toBeVisible();
+	await expectAccessible(page);
+	await sheet.getByRole('button', { name: 'Close chord options' }).click();
+
+	await page.getByLabel('Instrument').selectOption('violin');
+	await page.reload();
+	await expect(page.getByLabel('Instrument')).toHaveValue('violin');
+	await expect(page.getByLabel('Show chords on')).toBeChecked();
+
+	await page.getByLabel('Instrument').selectOption('piano');
+	await page.getByRole('link', { name: 'Play' }).click();
+	await expect(page.locator('.chord').first().getByRole('img', { name: /^Piano keys: / })).toBeVisible();
+	await expectAccessible(page);
 });
 
 test('share link opens and saves to the library', async ({ page, context }) => {

@@ -2,6 +2,8 @@
 	import { onMount } from 'svelte';
 	import Icon from './Icon.svelte';
 	import LevelStepper from './LevelStepper.svelte';
+	import ChordDiagram from './ChordDiagram.svelte';
+	import { prefs } from '$lib/state/app.svelte';
 	import { alternativesFor, canAdjust, levelOf, replacementFamily } from '$lib/engine/song';
 	import { renderChord } from '$lib/engine/theory';
 	import type { Song } from '$lib/engine/types';
@@ -65,10 +67,11 @@
 	>
 		<div class="inner">
 			<div class="top">
-				<div>
+				<div class="grow">
 					<h2 id="sheet-title"><span class="sym">{chord.symbol}</span><span class="visually-hidden">, {chord.spoken}</span></h2>
 					<p class="muted">{sectionLabel}, bar {bar + 1} · {chord.numeral}</p>
 				</div>
+				{#if prefs.showShapes}<ChordDiagram {chord} instrument={prefs.instrument} />{/if}
 				<button class="btn icon ghost" type="button" onclick={onclose} aria-label="Close chord options">
 					<Icon name="close" />
 				</button>
@@ -135,8 +138,12 @@
 	}
 	.top {
 		display: flex;
-		justify-content: space-between;
+		gap: 12px;
 		align-items: flex-start;
+	}
+	.grow {
+		flex: 1;
+		min-width: 0;
 	}
 	h2 .sym {
 		font-size: 2.5rem;

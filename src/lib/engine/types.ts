@@ -4,6 +4,7 @@ export type Complexity = 1 | 2 | 3 | 4 | 5;
 export type Mode = 'major' | 'minor' | 'dorian' | 'lydian' | 'mixolydian';
 export type TimeSignature = '4/4' | '3/4' | '6/8';
 export type Tonality = 'major' | 'minor';
+export type Instrument = 'piano' | 'guitar' | 'violin';
 
 /** What a section does in the song; drives which progressions fit. */
 export type Role = 'intro' | 'verse' | 'chorus' | 'bridge' | 'outro';

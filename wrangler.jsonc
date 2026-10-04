@@ -4,6 +4,8 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "chordstand",
 	"compatibility_date": "2026-10-04",
+	// Cloudflare creates the DNS record and certificate for this hostname on deploy (the atlesque.dev zone must be in this account).
+	"routes": [{ "pattern": "chordstand.atlesque.dev", "custom_domain": true }],
 	"assets": {
 		"directory": "./build",
 		// Unknown paths (/new, /song/:id, /s) get index.html with 200, so the SPA router takes over.

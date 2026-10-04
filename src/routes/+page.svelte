@@ -227,11 +227,13 @@
 	}
 	.brand {
 		font-size: clamp(2.5rem, 11vw, 3.75rem);
-		letter-spacing: -0.035em;
+		font-weight: 800;
+		letter-spacing: -0.04em;
 		line-height: 1;
 		margin-top: 6px;
 	}
 	.brand em {
+		font-style: normal;
 		font-weight: 400;
 		background: linear-gradient(100deg, var(--accent), var(--accent-2));
 		-webkit-background-clip: text;
@@ -390,7 +392,6 @@
 	}
 	.small-title {
 		font-size: 1.25rem;
-		font-style: italic;
 	}
 	.row {
 		display: flex;

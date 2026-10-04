@@ -472,7 +472,6 @@
 	}
 	.small-title {
 		font-size: 1.25rem;
-		font-style: italic;
 	}
 	.row {
 		display: flex;

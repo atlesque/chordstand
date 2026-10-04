@@ -167,7 +167,6 @@
 		align-items: center;
 		gap: 8px;
 		font-family: var(--display);
-		font-style: italic;
 		font-weight: 600;
 		font-size: 1.25rem;
 		cursor: pointer;

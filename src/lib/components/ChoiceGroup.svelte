@@ -34,7 +34,6 @@
 	}
 	legend {
 		font-family: var(--display);
-		font-style: italic;
 		font-weight: 600;
 		font-size: 1.375rem;
 		margin-bottom: 10px;

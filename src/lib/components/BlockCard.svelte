@@ -60,8 +60,9 @@
 </script>
 
 <li
-	class="block"
+	class="block rise"
 	class:dragging
+	style:--i={index}
 	data-section-index={index}
 	style:--tag="var(--c-{colorOf(section.label)})"
 	aria-labelledby={headingId}
@@ -152,19 +153,45 @@
 
 <style>
 	.block {
+		position: relative;
 		list-style: none;
-		background: var(--surface);
+		/* A wash of the section's colour bleeding in from the left edge of the glass. */
+		background:
+			radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--tag) 16%, transparent), transparent 60%),
+			var(--surface);
 		border: 1px solid var(--border);
-		border-left: 6px solid var(--tag);
-		border-radius: var(--radius);
-		padding: 4px 8px 8px;
+		border-radius: var(--radius-lg);
+		box-shadow:
+			var(--shadow),
+			inset 0 1px 0 var(--hi);
+		backdrop-filter: var(--glass);
+		-webkit-backdrop-filter: var(--glass);
+		padding: 4px 8px 8px 12px;
 		min-width: 0;
 		container-type: inline-size;
+		transition:
+			transform 0.3s var(--ease),
+			box-shadow 0.3s var(--ease),
+			border-color 0.2s;
+	}
+	.block::before {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 14px;
+		bottom: 14px;
+		width: 4px;
+		border-radius: 0 4px 4px 0;
+		background: var(--tag);
+		box-shadow: 0 0 12px var(--tag);
 	}
 	.block.dragging {
-		box-shadow: var(--shadow);
+		z-index: 2;
+		transform: scale(1.02) rotate(-0.6deg);
+		box-shadow:
+			0 24px 48px -16px var(--glow),
+			inset 0 1px 0 var(--hi);
 		border-color: var(--accent);
-		opacity: 0.92;
 	}
 	.head {
 		display: flex;
@@ -195,7 +222,9 @@
 		column-gap: 10px;
 	}
 	h3 {
-		font-size: 1.0625rem;
+		font-family: var(--display);
+		font-size: 1.25rem;
+		font-weight: 600;
 	}
 	.meta {
 		font-size: 0.875rem;
@@ -219,12 +248,13 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 2px;
-		background: var(--bg);
-		border-radius: 8px;
+		background: var(--field);
+		border-radius: 10px;
 		border: 1px solid var(--border);
 		min-width: 0;
 	}
 	.actions {
+		animation: rise 0.4s var(--ease) backwards;
 		margin-top: 8px;
 		padding-top: 8px;
 		border-top: 1px solid var(--border);

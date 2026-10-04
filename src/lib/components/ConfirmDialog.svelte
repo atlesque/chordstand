@@ -27,17 +27,32 @@
 <style>
 	dialog {
 		border: 1px solid var(--border);
-		border-radius: 16px;
-		background: var(--bg);
+		border-radius: var(--radius-lg);
+		background: color-mix(in srgb, var(--bg) 88%, transparent);
 		color: var(--text);
-		padding: 20px;
+		padding: 24px;
 		width: min(420px, calc(100vw - 32px));
+		box-shadow:
+			0 32px 80px -24px rgb(0 0 0 / 0.5),
+			inset 0 1px 0 var(--hi);
+		backdrop-filter: var(--glass);
+		-webkit-backdrop-filter: var(--glass);
+		animation: dialog-in 0.4s var(--spring);
+	}
+	@keyframes dialog-in {
+		from {
+			opacity: 0;
+			transform: translateY(12px) scale(0.94);
+		}
 	}
 	dialog::backdrop {
-		background: rgb(0 0 0 / 0.5);
+		background: rgb(10 8 20 / 0.45);
+		backdrop-filter: blur(6px);
+		-webkit-backdrop-filter: blur(6px);
 	}
 	h2 {
-		font-size: 1.25rem;
+		font-family: var(--display);
+		font-size: 1.5rem;
 	}
 	p {
 		margin: 8px 0 20px;
@@ -51,5 +66,6 @@
 		background: var(--danger);
 		border-color: var(--danger);
 		color: var(--bg);
+		box-shadow: none;
 	}
 </style>

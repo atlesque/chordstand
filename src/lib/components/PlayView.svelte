@@ -233,12 +233,15 @@
 		align-items: center;
 		gap: 2px;
 		padding: 4px 8px;
-		background: var(--stage-bg);
+		background: color-mix(in srgb, var(--stage-bg) 80%, transparent);
 		border-bottom: 1px solid var(--border);
+		backdrop-filter: var(--glass);
+		-webkit-backdrop-filter: var(--glass);
 	}
 	.controls :global(.btn[aria-pressed='true']) {
-		background: var(--accent);
+		background: linear-gradient(120deg, var(--accent), var(--accent-2));
 		color: var(--accent-text);
+		box-shadow: 0 6px 18px -8px var(--glow);
 	}
 	.where {
 		flex: 1;
@@ -246,7 +249,7 @@
 		padding: 0 4px;
 	}
 	.song-title {
-		font-size: 1rem;
+		font-size: 1.125rem;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -260,7 +263,8 @@
 	}
 	.progress {
 		height: 4px;
-		background: var(--accent);
+		background: linear-gradient(90deg, var(--accent), var(--accent-2));
+		box-shadow: 0 0 12px var(--glow);
 		transform-origin: left;
 		animation: grow var(--ms) linear forwards;
 	}
@@ -287,17 +291,28 @@
 	.section {
 		border: 2px solid transparent;
 		border-left: 8px solid var(--tag);
-		border-radius: var(--radius);
+		border-radius: var(--radius-lg);
 		padding: 8px 12px 12px;
 		opacity: 0.55;
+		transition:
+			opacity 0.4s var(--ease),
+			border-color 0.4s var(--ease),
+			box-shadow 0.5s var(--ease),
+			transform 0.5s var(--ease);
+		transform: scale(0.985);
 	}
 	.section.current {
 		opacity: 1;
+		transform: none;
 		border-color: var(--stage-text);
 		border-left-color: var(--tag);
+		/* Lit from behind in the section's colour; the chords themselves stay pure black or white. */
+		box-shadow: 0 18px 60px -24px var(--tag);
 	}
 	h2 {
-		font-size: 1.25rem;
+		font-family: var(--display);
+		font-size: 1.375rem;
+		font-weight: 600;
 		margin-bottom: 8px;
 	}
 	.bars {
@@ -347,8 +362,10 @@
 		display: flex;
 		gap: 8px;
 		padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
-		background: var(--stage-bg);
+		background: color-mix(in srgb, var(--stage-bg) 80%, transparent);
 		border-top: 1px solid var(--border);
+		backdrop-filter: var(--glass);
+		-webkit-backdrop-filter: var(--glass);
 	}
 	.nav .btn {
 		flex: 1;

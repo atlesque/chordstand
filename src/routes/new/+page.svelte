@@ -59,7 +59,10 @@
 <div class="page">
 	<header class="topbar">
 		<a class="btn icon ghost" href="/" aria-label="Back to your songs"><Icon name="left" /></a>
-		<h1 class="grow">New song</h1>
+		<div class="grow">
+			<p class="eyebrow">Compose</p>
+			<h1>New song</h1>
+		</div>
 	</header>
 
 	<main id="main">
@@ -113,10 +116,25 @@
 
 <style>
 	h1 {
-		font-size: 1.375rem;
+		font-size: 1.75rem;
 	}
 	form {
-		padding-top: 8px;
+		padding-top: 12px;
+	}
+	form > :global(*) {
+		animation: rise 0.6s var(--ease) backwards;
+	}
+	form > :global(:nth-child(2)) {
+		animation-delay: 60ms;
+	}
+	form > :global(:nth-child(3)) {
+		animation-delay: 120ms;
+	}
+	form > :global(:nth-child(4)) {
+		animation-delay: 180ms;
+	}
+	form > :global(:nth-child(n + 5)) {
+		animation-delay: 240ms;
 	}
 	.strong {
 		font-weight: 700;
@@ -147,8 +165,32 @@
 		min-height: var(--tap);
 		display: flex;
 		align-items: center;
-		font-weight: 700;
+		gap: 8px;
+		font-family: var(--display);
+		font-style: italic;
+		font-weight: 600;
+		font-size: 1.25rem;
 		cursor: pointer;
+		list-style: none;
+	}
+	summary::-webkit-details-marker {
+		display: none;
+	}
+	summary::after {
+		content: '+';
+		margin-left: auto;
+		font-family: var(--font);
+		font-style: normal;
+		font-size: 1.5rem;
+		font-weight: 400;
+		color: var(--muted);
+		transition: rotate 0.3s var(--spring);
+	}
+	.advanced[open] summary::after {
+		rotate: 45deg;
+	}
+	.advanced[open] .adv-body {
+		animation: rise 0.45s var(--ease);
 	}
 	.adv-body {
 		display: flex;

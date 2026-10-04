@@ -43,7 +43,10 @@
 	<div class="page">
 		<header class="topbar">
 			<a class="btn icon ghost" href="/" aria-label="Your songs"><Icon name="library" /></a>
-			<h1 class="grow">{song.title}</h1>
+			<div class="grow">
+				<p class="eyebrow">Shared with you</p>
+				<h1>{song.title}</h1>
+			</div>
 		</header>
 		<main id="main">
 			<p class="muted">
@@ -51,8 +54,8 @@
 				· {songTonalityLabel(song)} · {song.settings.bpm} BPM
 			</p>
 			<ol class="sections">
-				{#each song.sections as section (section.id)}
-					<li class="card section" style:--tag="var(--c-{colorOf(section.label)})">
+				{#each song.sections as section, i (section.id)}
+					<li class="card section rise" style:--i={i} style:--tag="var(--c-{colorOf(section.label)})">
 						<h2 class="label-tag">{section.label} <span class="muted small">{section.bars} bars</span></h2>
 						<p class="chords">
 							{#each renderSection(song, section) as bar (bar.bar)}
@@ -75,7 +78,7 @@
 
 <style>
 	h1 {
-		font-size: 1.25rem;
+		font-size: 1.75rem;
 	}
 	.sections {
 		list-style: none;
@@ -83,16 +86,21 @@
 		margin: 0;
 		display: flex;
 		flex-direction: column;
-		gap: 8px;
+		gap: 10px;
 	}
 	.section {
-		padding: 12px;
-		border-left: 6px solid var(--tag);
+		padding: 14px 16px;
+		background:
+			radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--tag) 16%, transparent), transparent 60%),
+			var(--surface);
 	}
 	h2 {
-		font-size: 1.0625rem;
+		font-family: var(--display);
+		font-size: 1.25rem;
+		font-weight: 600;
 	}
 	.small {
+		font-family: var(--font);
 		font-size: 0.875rem;
 		font-weight: 500;
 	}

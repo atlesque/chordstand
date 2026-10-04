@@ -6,6 +6,7 @@
 	import { announce, repo, showToast } from '$lib/state/app.svelte';
 	import { duplicateSong, setTitle } from '$lib/engine/meta';
 	import { songSummary } from '$lib/engine/names';
+	import { colorOf } from '$lib/engine/data';
 	import { buildExport, downloadJson, exportFileName, parseImport } from '$lib/storage/transfer';
 	import type { Song } from '$lib/engine/types';
 
@@ -27,6 +28,12 @@
 		status = r.status;
 	}
 	load();
+
+	// Each song gets a little cover: a colour swirl of its own sections, in order.
+	function cover(song: Song): string {
+		const stops = song.sections.map((s) => `var(--c-${colorOf(s.label)})`);
+		return stops.length ? `conic-gradient(from 200deg, ${[...stops, stops[0]].join(',')})` : 'var(--accent-soft)';
+	}
 
 	function relative(iso: string): string {
 		const diff = Date.now() - new Date(iso).getTime();
@@ -108,8 +115,14 @@
 <svelte:head><title>Chordstand · Your songs</title></svelte:head>
 
 <div class="page">
-	<header class="topbar">
-		<h1 class="grow brand">Chordstand</h1>
+	<header class="topbar hero">
+		<div class="grow">
+			<p class="eyebrow">Songs for the music stand</p>
+			<h1 class="brand">Chord<em>stand</em></h1>
+			<svg class="squiggle" viewBox="0 0 200 12" aria-hidden="true" focusable="false"
+				><path d="M2 8c14-8 26-8 38 0s24 8 38 0 26-8 38 0 24 8 38 0 26-8 38 0" pathLength="1" /></svg
+			>
+		</div>
 		<ThemeToggle />
 	</header>
 
@@ -124,17 +137,18 @@
 		{/if}
 
 		{#if rows.length === 0}
-			<section class="empty">
-				<h2>Your first song is three taps away</h2>
+			<section class="empty rise">
+				<div class="orb" aria-hidden="true"></div>
+				<h2 class="display">Your first song is three taps away</h2>
 				<p class="muted">Pick a style, a mood and how rich the chords should be. Chordstand writes a full song structure you can rearrange and play from your music stand.</p>
 				<a class="btn primary" href="/new">Create a song</a>
 			</section>
 		{:else}
-			<h2 class="list-title">Your songs <span class="muted">({rows.length})</span></h2>
+			<h2 class="list-title display">Your songs <span class="muted">({rows.length})</span></h2>
 			<ul class="songs">
-				{#each rows as row (row.song.id)}
+				{#each rows as row, i (row.song.id)}
 					{@const song = row.song}
-					<li class="card song">
+					<li class="card song rise" style:--i={i}>
 						<div class="main-row">
 							{#if renamingId === song.id}
 								<form class="rename" onsubmit={(e) => saveRename(e, song)}>
@@ -145,9 +159,12 @@
 								</form>
 							{:else}
 								<a class="song-link" href="/song/{song.id}">
-									<span class="title">{song.title}</span>
-									<span class="muted small">{songSummary(song)}</span>
-									<span class="muted small">Edited {relative(song.updatedAt)}</span>
+									<span class="cover" style:background={cover(song)} aria-hidden="true"></span>
+									<span class="text">
+										<span class="title">{song.title}</span>
+										<span class="muted small">{songSummary(song)}</span>
+										<span class="muted small">Edited {relative(song.updatedAt)}</span>
+									</span>
 								</a>
 								<button
 									class="btn icon ghost"
@@ -175,8 +192,8 @@
 			</ul>
 		{/if}
 
-		<section class="tools" aria-labelledby="backup-title">
-			<h2 id="backup-title" class="small-title">Backup</h2>
+		<section class="tools rise" style:--i={rows.length + 1} aria-labelledby="backup-title">
+			<h2 id="backup-title" class="small-title display">Backup</h2>
 			<p class="muted small">Songs are stored only in this browser. Export a file to back them up or move them to another device.</p>
 			<div class="row">
 				<button class="btn" type="button" onclick={exportAll} disabled={rows.length === 0}><Icon name="download" />Export all</button>
@@ -204,28 +221,86 @@
 {/if}
 
 <style>
+	.hero {
+		align-items: flex-start;
+		padding: 12px 0 20px;
+	}
 	.brand {
-		font-size: 1.5rem;
-		letter-spacing: -0.02em;
+		font-size: clamp(2.5rem, 11vw, 3.75rem);
+		letter-spacing: -0.035em;
+		line-height: 1;
+		margin-top: 6px;
+	}
+	.brand em {
+		font-weight: 400;
+		background: linear-gradient(100deg, var(--accent), var(--accent-2));
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+		padding-right: 0.08em;
+	}
+	.squiggle {
+		display: block;
+		width: 132px;
+		height: 12px;
+		margin-top: 8px;
+		fill: none;
+		stroke: var(--accent-2);
+		stroke-width: 2.5;
+		stroke-linecap: round;
+		stroke-dasharray: 1;
+		animation: draw 1.4s 0.2s var(--ease) backwards;
+	}
+	@keyframes draw {
+		from {
+			stroke-dashoffset: 1;
+		}
 	}
 	.empty {
 		text-align: center;
-		padding: 48px 8px;
+		padding: 24px 8px 48px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		gap: 12px;
 	}
 	.empty h2 {
-		font-size: 1.375rem;
+		font-size: 1.75rem;
+		max-width: 14em;
+	}
+	.orb {
+		width: 132px;
+		height: 132px;
+		margin-bottom: 12px;
+		border-radius: 50%;
+		background: conic-gradient(from 0deg, var(--c-verse), var(--c-chorus), var(--c-bridge), var(--c-a), var(--c-b), var(--c-verse));
+		box-shadow: 0 24px 60px -20px var(--glow), inset 0 0 30px rgb(255 255 255 / 0.35);
+		animation:
+			spin 24s linear infinite,
+			float 6s ease-in-out infinite alternate;
+	}
+	@keyframes spin {
+		to {
+			rotate: 360deg;
+		}
+	}
+	@keyframes float {
+		to {
+			translate: 0 -10px;
+		}
 	}
 	.empty p {
 		max-width: 34em;
 		margin: 0;
 	}
 	.list-title {
-		font-size: 1.125rem;
-		margin: 8px 0 12px;
+		font-size: 1.5rem;
+		margin: 8px 0 14px;
+	}
+	.list-title .muted {
+		font-family: var(--font);
+		font-size: 1rem;
+		font-weight: 500;
 	}
 	.songs {
 		list-style: none;
@@ -233,10 +308,24 @@
 		padding: 0;
 		display: flex;
 		flex-direction: column;
-		gap: 8px;
+		gap: 10px;
 	}
 	.song {
 		padding: 4px 4px 4px 0;
+		transition:
+			transform 0.3s var(--ease),
+			box-shadow 0.3s var(--ease);
+	}
+	@media (hover: hover) {
+		.song:hover {
+			transform: translateY(-2px);
+			box-shadow:
+				0 18px 40px -18px var(--glow),
+				inset 0 1px 0 var(--hi);
+		}
+		.song:hover .cover {
+			rotate: 40deg;
+		}
 	}
 	.main-row {
 		display: flex;
@@ -246,15 +335,30 @@
 		flex: 1;
 		min-width: 0;
 		display: flex;
-		flex-direction: column;
+		align-items: center;
+		gap: 14px;
 		padding: 8px 12px;
 		color: inherit;
 		text-decoration: none;
 		border-radius: var(--radius);
 	}
+	.cover {
+		width: 52px;
+		height: 52px;
+		flex: none;
+		border-radius: 50%;
+		box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.25), inset 0 0 14px rgb(0 0 0 / 0.25), 0 6px 16px -8px rgb(0 0 0 / 0.5);
+		transition: rotate 0.8s var(--ease);
+	}
+	.text {
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+	}
 	.title {
-		font-weight: 700;
-		font-size: 1.0625rem;
+		font-family: var(--display);
+		font-weight: 600;
+		font-size: 1.1875rem;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -267,6 +371,7 @@
 		flex-wrap: wrap;
 		gap: 8px;
 		padding: 4px 12px 8px;
+		animation: rise 0.4s var(--ease) backwards;
 	}
 	.rename {
 		display: flex;
@@ -284,7 +389,8 @@
 		border-top: 1px solid var(--border);
 	}
 	.small-title {
-		font-size: 1rem;
+		font-size: 1.25rem;
+		font-style: italic;
 	}
 	.row {
 		display: flex;

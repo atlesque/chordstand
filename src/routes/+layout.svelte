@@ -1,9 +1,21 @@
 <script lang="ts">
 	import '../app.css';
 	import { onMount } from 'svelte';
+	import { onNavigate } from '$app/navigation';
 	import { applyTheme, dismissToast, live, prefs, requestPersistence, toasts } from '$lib/state/app.svelte';
 
 	let { children } = $props();
+
+	// Cross-fade between pages where the browser supports view transitions.
+	onNavigate((nav) => {
+		if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		return new Promise((resolve) => {
+			document.startViewTransition(async () => {
+				resolve();
+				await nav.complete;
+			});
+		});
+	});
 
 	onMount(() => {
 		applyTheme(prefs.theme);
@@ -41,20 +53,31 @@
 	.toast {
 		position: fixed;
 		left: 50%;
-		transform: translateX(-50%);
+		translate: -50% 0;
 		bottom: calc(88px + env(safe-area-inset-bottom, 0px));
 		z-index: 50;
 		display: flex;
 		align-items: center;
 		gap: 8px;
-		padding: 4px 4px 4px 16px;
+		min-height: 48px;
+		padding: 4px 4px 4px 20px;
 		max-width: calc(100vw - 32px);
-		background: var(--text);
+		background: color-mix(in srgb, var(--text) 90%, transparent);
 		color: var(--bg);
-		border-radius: var(--radius);
-		box-shadow: var(--shadow);
+		border-radius: 999px;
+		box-shadow: 0 16px 40px -12px rgb(0 0 0 / 0.45);
+		backdrop-filter: var(--glass);
+		-webkit-backdrop-filter: var(--glass);
+		animation: toast-in 0.45s var(--spring) backwards;
+	}
+	@keyframes toast-in {
+		from {
+			opacity: 0;
+			transform: translateY(16px) scale(0.92);
+		}
 	}
 	.toast .btn {
+		border-radius: 999px;
 		color: var(--bg);
 		text-decoration: underline;
 	}

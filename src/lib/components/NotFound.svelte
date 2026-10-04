@@ -7,7 +7,7 @@
 
 <svelte:head><title>{title} · Chordstand</title></svelte:head>
 
-<main id="main" class="page nf">
+<main id="main" class="page nf rise">
 	<h1>{title}</h1>
 	<p class="muted">{message}</p>
 	<a class="btn primary" href="/">Go to your songs</a>
@@ -21,6 +21,9 @@
 		flex-direction: column;
 		align-items: center;
 		gap: 12px;
+	}
+	h1 {
+		font-size: 2rem;
 	}
 	p {
 		max-width: 32em;

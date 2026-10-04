@@ -7,7 +7,7 @@ test('first song in three taps @a11y', async ({ page }) => {
 
 	await page.getByRole('link', { name: 'Create a song' }).click();
 	await expect(page.getByRole('heading', { name: 'New song' })).toBeVisible();
-	await expect(page.getByRole('radio', { name: 'Pop' })).toBeChecked();
+	await expect(page.getByRole('radio', { name: 'Pop', exact: true })).toBeChecked();
 	await expectAccessible(page);
 
 	await page.getByRole('button', { name: 'Generate' }).click();

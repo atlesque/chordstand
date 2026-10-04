@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_SETUP, fitToBars, formLabels, generateSong, suggestNextLabel } from '$lib/engine/generator';
 import { createRng, mulberry32 } from '$lib/engine/prng';
 import { degreeRoot, renderChord, transposeTonic } from '$lib/engine/theory';
-import { STYLE_IDS, MOOD_IDS } from '$lib/engine/data';
+import { STYLE_IDS, STYLES, MOOD_IDS } from '$lib/engine/data';
+import { isValidDegree } from '$lib/engine/degree';
 import {
 	addSection,
 	adjustLevel,
@@ -123,6 +124,29 @@ describe('generator', () => {
 					}
 				}
 			}
+		}
+	});
+
+	it('has valid pool data for every style, both tonalities included', () => {
+		expect(STYLE_IDS).toEqual(expect.arrayContaining(['jpop', 'jrock', 'shoegaze']));
+		for (const id of STYLE_IDS) {
+			const style = STYLES[id];
+			expect(style.id).toBe(id);
+			expect(style.bpm[0]).toBeLessThan(style.bpm[1]);
+			for (const tonality of ['major', 'minor'] as const) {
+				expect(style.pool.some((e) => e.tonality === tonality && !e.modes && e.minComplexity === 1)).toBe(true);
+			}
+			for (const entry of style.pool) {
+				for (const bar of entry.degrees) {
+					for (const degree of bar.split(' ')) expect(isValidDegree(degree), `${id}: ${degree}`).toBe(true);
+				}
+			}
+		}
+	});
+
+	it('is deterministic for the new styles too', () => {
+		for (const style of ['jpop', 'jrock', 'shoegaze'] as const) {
+			expect(symbols(generateSong(fixed({ style }), { now }))).toEqual(symbols(generateSong(fixed({ style }), { now })));
 		}
 	});
 

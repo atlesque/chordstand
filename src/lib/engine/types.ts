@@ -1,4 +1,4 @@
-export type StyleId = 'pop' | 'ballad' | 'jazz' | 'blues' | 'gospel' | 'folk' | 'lofi';
+export type StyleId = 'pop' | 'ballad' | 'jazz' | 'blues' | 'gospel' | 'folk' | 'lofi' | 'jpop' | 'jrock' | 'shoegaze';
 export type MoodId = 'happy' | 'melancholic' | 'dreamy' | 'tense' | 'uplifting' | 'calm';
 export type Complexity = 1 | 2 | 3 | 4 | 5;
 export type Mode = 'major' | 'minor' | 'dorian' | 'lydian' | 'mixolydian';

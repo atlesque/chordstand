@@ -1,0 +1,27 @@
+{
+  "id": "jrock",
+  "name": "J-rock",
+  "bpm": [140, 184],
+  "maxLevel": 3,
+  "tonicLanding": true,
+  "substitutions": { "secondaryDominants": true },
+  "pool": [
+    { "degrees": ["i", "bVI", "bVII", "i"], "weight": 6, "tonality": "minor", "roles": ["verse", "chorus", "intro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["bVI", "bVII", "i", "i"], "weight": 6, "tonality": "minor", "roles": ["chorus"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["i", "bVII", "bVI", "V"], "weight": 4, "tonality": "minor", "roles": ["verse", "bridge"], "moods": ["tense", "melancholic"], "minComplexity": 1 },
+    { "degrees": ["bVI", "bVII", "v", "i"], "weight": 4, "tonality": "minor", "roles": ["chorus", "verse"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["i", "i", "bVI", "bVII"], "weight": 4, "tonality": "minor", "roles": ["verse", "intro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["iv", "bVII", "bIII", "bVI"], "weight": 3, "tonality": "minor", "roles": ["bridge", "verse"], "moods": ["*"], "minComplexity": 2 },
+    { "degrees": ["bVI", "bVII", "bIII", "bVI", "iv", "V", "i", "i"], "weight": 3, "tonality": "minor", "roles": ["chorus"], "moods": ["*"], "minComplexity": 2 },
+    { "degrees": ["i", "IV", "bVI", "bVII"], "weight": 2, "tonality": "minor", "modes": ["dorian"], "roles": ["verse", "chorus"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["bVI", "V", "i", "i"], "weight": 2, "tonality": "minor", "roles": ["outro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["IV", "V", "iii", "vi"], "weight": 5, "tonality": "major", "roles": ["chorus", "verse"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["I", "V", "vi", "IV"], "weight": 4, "tonality": "major", "roles": ["verse", "chorus", "intro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["vi", "IV", "V", "I"], "weight": 4, "tonality": "major", "roles": ["chorus"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["I", "bVII", "IV", "I"], "weight": 3, "tonality": "major", "roles": ["verse", "intro"], "moods": ["happy", "uplifting"], "minComplexity": 1 },
+    { "degrees": ["bVI", "bVII", "I", "I"], "weight": 3, "tonality": "major", "roles": ["chorus", "bridge", "outro"], "moods": ["uplifting", "happy", "tense"], "minComplexity": 1 },
+    { "degrees": ["IV", "V", "vi", "vi"], "weight": 3, "tonality": "major", "roles": ["chorus", "bridge"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["I", "bVII", "IV", "V"], "weight": 2, "tonality": "major", "modes": ["mixolydian"], "roles": ["verse", "chorus"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["IV", "V", "I", "I"], "weight": 2, "tonality": "major", "roles": ["outro"], "moods": ["*"], "minComplexity": 1 }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "id": "shoegaze",
+  "name": "Shoegaze",
+  "bpm": [72, 112],
+  "minLevel": 2,
+  "tonicLanding": false,
+  "substitutions": { "borrowedIv": true },
+  "pool": [
+    { "degrees": ["I", "I", "IV", "IV"], "weight": 5, "tonality": "major", "roles": ["verse", "intro", "outro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["I", "iii", "IV", "iv"], "weight": 4, "tonality": "major", "roles": ["chorus", "verse"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["IV", "I", "IV", "I"], "weight": 4, "tonality": "major", "roles": ["verse", "chorus"], "moods": ["calm", "dreamy", "melancholic"], "minComplexity": 1 },
+    { "degrees": ["vi", "IV", "I", "V"], "weight": 3, "tonality": "major", "roles": ["chorus"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["I", "bVII", "IV", "I"], "weight": 3, "tonality": "major", "roles": ["verse", "chorus"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["I", "vi", "iii", "IV"], "weight": 3, "tonality": "major", "roles": ["verse", "bridge"], "moods": ["*"], "minComplexity": 2 },
+    { "degrees": ["IV", "IV", "iv", "iv"], "weight": 3, "tonality": "major", "roles": ["bridge", "outro"], "moods": ["*"], "minComplexity": 2 },
+    { "degrees": ["bVI", "bVII", "I", "I"], "weight": 2, "tonality": "major", "roles": ["bridge", "chorus"], "moods": ["*"], "minComplexity": 2 },
+    { "degrees": ["I", "II", "I", "II"], "weight": 4, "tonality": "major", "modes": ["lydian"], "roles": ["verse", "intro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["I", "II", "IV", "I"], "weight": 3, "tonality": "major", "modes": ["lydian"], "roles": ["chorus"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["I", "bVII", "I", "bVII"], "weight": 3, "tonality": "major", "modes": ["mixolydian"], "roles": ["verse", "chorus"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["i", "i", "bVI", "bVI"], "weight": 5, "tonality": "minor", "roles": ["verse", "intro", "outro"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["i", "bVII", "bVI", "bVII"], "weight": 4, "tonality": "minor", "roles": ["verse", "chorus"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["bVI", "bIII", "bVII", "i"], "weight": 4, "tonality": "minor", "roles": ["chorus"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["i", "bIII", "bVII", "bVI"], "weight": 3, "tonality": "minor", "roles": ["verse", "bridge"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["iv", "iv", "i", "i"], "weight": 3, "tonality": "minor", "roles": ["bridge", "outro"], "moods": ["*"], "minComplexity": 2 },
+    { "degrees": ["i", "IV", "i", "IV"], "weight": 4, "tonality": "minor", "modes": ["dorian"], "roles": ["verse", "chorus"], "moods": ["*"], "minComplexity": 1 },
+    { "degrees": ["i", "bIII", "IV", "IV"], "weight": 3, "tonality": "minor", "modes": ["dorian"], "roles": ["chorus", "bridge"], "moods": ["*"], "minComplexity": 1 }
+  ]
+}

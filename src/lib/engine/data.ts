@@ -41,7 +41,7 @@ export type PatternEntry = { degrees: string[]; weight: number; minComplexity: n
 // Style files are data, not code: drop a new JSON file into src/data/styles to add a style.
 const styleModules = import.meta.glob<StyleData>('/src/data/styles/*.json', { eager: true, import: 'default' });
 
-const STYLE_ORDER: StyleId[] = ['pop', 'ballad', 'jazz', 'blues', 'gospel', 'folk', 'lofi'];
+const STYLE_ORDER: StyleId[] = ['pop', 'ballad', 'jazz', 'blues', 'gospel', 'folk', 'lofi', 'jpop', 'jrock', 'shoegaze'];
 
 export const STYLES: Record<StyleId, StyleData> = Object.fromEntries(
 	Object.values(styleModules).map((s) => [s.id, s])

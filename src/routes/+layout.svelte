@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import { onNavigate } from '$app/navigation';
 	import { applyTheme, dismissToast, live, prefs, requestPersistence, toasts } from '$lib/state/app.svelte';
+	import { signedIn, syncCode } from '$lib/state/repo';
 
 	let { children } = $props();
 
@@ -20,6 +21,8 @@
 	onMount(() => {
 		applyTheme(prefs.theme);
 		requestPersistence();
+		// Atlesque Play sync, only for someone signed in or coming back from signing in.
+		if (signedIn() || location.search.includes('mbpg_code')) syncCode().then((m) => m.start());
 		if ('serviceWorker' in navigator && !import.meta.env.DEV) {
 			navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => {});
 		}

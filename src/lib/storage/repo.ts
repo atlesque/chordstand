@@ -64,6 +64,8 @@ export class SongRepo {
 	#memory = new MemoryStorage();
 	#invalid = new Set<string>();
 	status: RepoStatus;
+	/** Called after every save or delete, except quiet ones (account sync writing what it pulled). */
+	onchange: ((id: string, deleted: boolean) => void) | null = null;
 
 	constructor(store: KV | null = probe()) {
 		this.#store = store ?? this.#memory;
@@ -193,20 +195,22 @@ export class SongRepo {
 		return null;
 	}
 
-	save(song: Song): SaveResult {
+	save(song: Song, quiet = false): SaveResult {
 		const result = this.#write(songKey(song.id), JSON.stringify(song));
 		const index = this.#readIndex().filter((e) => e.id !== song.id);
 		index.push({ id: song.id, title: song.title, updatedAt: song.updatedAt });
 		this.#write(INDEX_KEY, JSON.stringify(index));
 		this.#refreshUsage();
+		if (!quiet) this.onchange?.(song.id, false);
 		return result;
 	}
 
-	delete(id: string) {
+	delete(id: string, quiet = false) {
 		this.#remove(songKey(id));
 		this.#invalid.delete(id);
 		this.#write(INDEX_KEY, JSON.stringify(this.#readIndex().filter((e) => e.id !== id)));
 		this.#refreshUsage();
+		if (!quiet) this.onchange?.(id, true);
 	}
 
 	all(): Song[] {

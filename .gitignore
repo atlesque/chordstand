@@ -7,3 +7,4 @@ node_modules
 /.lighthouseci
 .DS_Store
 *.log
+/scripts/library/.runs

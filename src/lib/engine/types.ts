@@ -12,7 +12,7 @@ export type Role = 'intro' | 'verse' | 'chorus' | 'bridge' | 'outro';
 /** Chord quality family; each family has its own simplify/embellish ladder. */
 export type Family = 'maj' | 'min' | 'dom' | 'dim';
 
-export type FormId = 'ab' | 'abab' | 'aaba' | 'vc2' | 'vcvcbc' | 'blues12' | 'length';
+export type FormId = 'ab' | 'abab' | 'aaba' | 'vc2' | 'vcvcbc' | 'blues12' | 'length' | 'library';
 
 export type SongSettings = {
 	style: StyleId;
@@ -70,4 +70,6 @@ export type SetupChoices = {
 	timeSignature: TimeSignature;
 	barsPerSection: 4 | 8 | 12 | 16;
 	seed: number | null; // null = random
+	/** Draw from the pre-generated song library when the style has one. */
+	useLibrary: boolean;
 };

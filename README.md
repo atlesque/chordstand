@@ -52,6 +52,24 @@ tests/e2e          Playwright + @axe-core/playwright
 
 Drop a JSON file into `src/data/styles/`. Each pool entry has `degrees` (one Roman numeral per bar, `"ii V"` for two chords in a bar), `weight`, `tonality` (`major`/`minor`), optional `modes`, `roles` (`intro`, `verse`, `chorus`, `bridge`, `outro`), `moods` (or `"*"`) and `minComplexity`. Chords are stored as degrees and rendered into the key, so transposing is free.
 
+### Song library (pre-generated with Claude)
+
+`src/data/library/<style>.json` holds curated song structures for every style, mood and complexity, written offline by Claude through the Message Batches API and shipped as static JSON. Each style is its own lazy chunk, loaded only when you tap **Generate** (and precached by the service worker for offline use), so it never touches the first-load budget. When a library song fits the choices, the generator takes its chords, mode, title and (with the **From the library** form) its section order, then applies keys, chord colours and substitutions as usual; otherwise it falls back to the rule-based pools. It can be switched off under Advanced settings.
+
+Each song stores its parts as degrees, bars separated by `|` and two chords in a bar separated by a space (`"I|vi|ii V|I"`). `src/lib/engine/library-check.ts` validates them, both when the library is built and in the unit tests.
+
+To (re)build it you need an Anthropic API key in `ANTHROPIC_API_KEY`, or in `CHORDSTAND_ANTHROPIC_KEY` in a Claude Code cloud environment, where `ANTHROPIC_API_KEY` is reserved:
+
+```sh
+npm run library -- plan                  # request count and cost estimate, spends nothing
+npm run library -- submit --limit 3      # small pilot
+npm run library -- submit --confirm      # full run: 10 styles x 6 moods x 5 levels x 2 requests
+npm run library -- status                # batch progress (most finish within an hour)
+npm run library -- collect               # download, validate, de-duplicate, write src/data/library/
+```
+
+`plan` and `submit` take `--styles`, `--moods`, `--complexities`, `--per-combo`, `--songs`, `--model` and `--effort` to top up thin combinations. Raw results stay in `scripts/library/.runs/` (git-ignored), so `collect` can be re-run without spending anything.
+
 ### Storage
 
 - `chordstand:v1:index`: `{id, title, updatedAt}` list for the library

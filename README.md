@@ -1,6 +1,6 @@
 # Chordstand
 
-Generate, rearrange and save piano song structures on your phone. A minimal, offline-friendly web app: no accounts, everything stays in your browser.
+Generate, rearrange and save piano song structures on your phone. A minimal, offline-friendly web app: everything is saved in your browser, and signing in with an Atlesque account (optional) syncs your songs across devices.
 
 Pick a style, a mood and a complexity, tap **Generate**, and you get a full song structure (Verse, Chorus, Bridge…) with a chord for every bar. Make chords simpler or richer, reorder and extend sections, then put the phone on the music stand and switch to the large play view.
 
@@ -13,6 +13,7 @@ Pick a style, a mood and a complexity, tap **Generate**, and you get a full song
 - **Extend**: add any section or let it suggest what fits next; add an outro, repeat the chorus, or a key change up a semitone.
 - **Play view**: full-screen, high-contrast chord grid (chords ≥ 32 px). Tap the left/right half, swipe, or use the arrow keys to move between sections; optional auto-advance at the song's BPM; keeps the screen awake.
 - **Library**: autosaves every change, sorted by last edit; rename, duplicate, delete; export one or all songs as JSON and import them again; share a song as a link (the song is compressed into the URL hash, no server).
+- **Sync (optional)**: sign in with your Atlesque account (Atlesque Play, email link, no password) and your library is kept on the account and merged with your other devices.
 - **Offline PWA**: installable, works offline after the first visit.
 - Optional Roman numerals under each chord; light, dark and system themes.
 
@@ -70,11 +71,24 @@ npm run library -- collect               # download, validate, de-duplicate, wri
 
 `plan` and `submit` take `--styles`, `--moods`, `--complexities`, `--per-combo`, `--songs`, `--model` and `--effort` to top up thin combinations. Raw results stay in `scripts/library/.runs/` (git-ignored), so `collect` can be re-run without spending anything.
 
+### Accounts and sync
+
+Sign-in is optional; without it nothing leaves the browser. **Sign in with Atlesque** on the library page goes to the hosted sign-in at [Atlesque Play](https://play.atlesque.dev) ([atlesque/mbp-games](https://github.com/atlesque/mbp-games), where Chordstand is the `chordstand` client in `src/clients.js`) and comes back with a one-time code that the app swaps for a 90-day token (PKCE). Signed in:
+
+- Songs are still saved to localStorage first. Each save or delete is also stamped and, after 10 seconds of quiet, the whole library goes up as the game's progress (`PUT /api/games/chordstand/progress`), deflated and base64'd (a few hundred bytes per song; the account allows 1 MB, so thousands of songs fit). The save's `songs` count is what the Atlesque Play hub shows.
+- Opening the app, coming back to the tab (at most once a minute), going online and **Sync now** pull the account's copy first. Merging is per song: the newest change wins, and deletions travel as tombstones (forgotten after 180 days). If another device saved in between, the server answers 409 with its copy, which is merged and sent again.
+- Signing out keeps every song in the browser. A 401 (signed out everywhere) does the same and says so.
+- The code lives in `src/lib/sync/` and `AccountPanel.svelte`, loaded only when the library page has rendered or someone is signed in, so it is outside the first-load budget.
+
+Cost: Chordstand itself stays static assets only (free requests). Sync requests go to the existing Atlesque Play Worker and its D1 database: a pull on open plus at most one request per 10 seconds of editing. Point a dev build at a local Atlesque Play with `VITE_PLAY_URL=http://localhost:8787 npm run dev` (sign-in redirects only work from origins listed for `chordstand` in mbp-games: production and localhost, not preview URLs).
+
 ### Storage
 
 - `chordstand:v1:index`: `{id, title, updatedAt}` list for the library
 - `chordstand:v1:song:<id>`: one full song (validated with Valibot on read; invalid songs are skipped and reported)
 - `chordstand:v1:prefs`: theme, wake lock, numerals, auto-advance, last setup
+- `chordstand:v1:account`: only while signed in: the token, email, the account save's revision, and when each song last changed or was deleted here
+- `chordstand:v1:signin`: the PKCE verifier and state while a sign-in is underway
 
 `schemaVersion` plus a migration per version bump lives in `src/lib/storage/schema.ts`. When storage is blocked or full, the app keeps working in memory and says so.
 

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Component } from 'svelte';
 	import { goto } from '$app/navigation';
 	import Icon from '$lib/components/Icon.svelte';
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
@@ -19,6 +20,9 @@
 	let titleDraft = $state('');
 	let confirmDelete = $state<Song | null>(null);
 	let fileInput: HTMLInputElement;
+	// The sign-in and sync panel loads after the page, so it stays out of the first-load budget.
+	let AccountPanel = $state<Component<{ onsync: () => void }>>();
+	import('$lib/components/AccountPanel.svelte').then((m) => (AccountPanel = m.default));
 
 	function load() {
 		const r = repo();
@@ -192,9 +196,13 @@
 			</ul>
 		{/if}
 
+		{#if AccountPanel}
+			<AccountPanel onsync={load} />
+		{/if}
+
 		<section class="tools rise" style:--i={rows.length + 1} aria-labelledby="backup-title">
 			<h2 id="backup-title" class="small-title display">Backup</h2>
-			<p class="muted small">Songs are stored only in this browser. Export a file to back them up or move them to another device.</p>
+			<p class="muted small">Songs are stored in this browser. Export a file to back them up or move them to another device.</p>
 			<div class="row">
 				<button class="btn" type="button" onclick={exportAll} disabled={rows.length === 0}><Icon name="download" />Export all</button>
 				<button class="btn" type="button" onclick={() => fileInput.click()}><Icon name="upload" />Import</button>

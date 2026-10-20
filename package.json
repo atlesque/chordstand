@@ -14,13 +14,15 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "size": "node scripts/size.mjs",
-    "icons": "node scripts/icons.mjs"
+    "icons": "node scripts/icons.mjs",
+    "library": "node scripts/library/generate.mjs"
   },
   "dependencies": {
     "@tonaljs/note": "4.12.1",
     "valibot": "^1.1.0"
   },
   "devDependencies": {
+    "@anthropic-ai/sdk": "^0.135.0",
     "@axe-core/playwright": "^4.10.0",
     "@playwright/test": "1.56.1",
     "@sveltejs/adapter-static": "^3.0.10",

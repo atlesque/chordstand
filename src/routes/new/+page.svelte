@@ -4,6 +4,7 @@
 	import Icon from '$lib/components/Icon.svelte';
 	import { COMPLEXITY_NAMES, FORM_IDS, FORMS, MOOD_IDS, MOODS, STYLE_IDS, STYLES } from '$lib/engine/data';
 	import { generateSong } from '$lib/engine/generator';
+	import { hasLibrary, loadLibrary } from '$lib/engine/library';
 	import { NOTE_CHOICES } from '$lib/engine/theory';
 	import type { Complexity, FormId, MoodId, SetupChoices, StyleId, TimeSignature } from '$lib/engine/types';
 	import { prefs, repo, savePrefs } from '$lib/state/app.svelte';
@@ -19,6 +20,8 @@
 	let timeSignature = $state<TimeSignature>(initial.timeSignature);
 	let barsPerSection = $state<SetupChoices['barsPerSection']>(initial.barsPerSection);
 	let seedText = $state(initial.seed === null ? '' : String(initial.seed));
+	let useLibrary = $state(initial.useLibrary !== false);
+	let busy = $state(false);
 
 	const styleOptions = STYLE_IDS.map((id) => ({ value: id, label: STYLES[id].name }));
 	const moodOptions = MOOD_IDS.map((id) => ({ value: id, label: MOODS[id].name }));
@@ -27,12 +30,21 @@
 		label: String(n),
 		hint: COMPLEXITY_NAMES[n - 1]
 	}));
-	const formOptions = FORM_IDS.map((id) => ({ value: id, label: FORMS[id].name }));
+	// "From the library" only makes sense for styles that ship a library and when it is switched on.
+	const libraryOn = $derived(useLibrary && hasLibrary(style));
+	const formOptions = $derived(
+		FORM_IDS.filter((id) => id !== 'library' || libraryOn).map((id) => ({ value: id, label: FORMS[id].name }))
+	);
+	$effect(() => {
+		if (form === 'library' && !libraryOn) form = 'vcvcbc';
+	});
 	const timeOptions = (['4/4', '3/4', '6/8'] as TimeSignature[]).map((t) => ({ value: t, label: t }));
 	const barOptions = ([4, 8, 12, 16] as const).map((n) => ({ value: n, label: String(n) }));
 
-	function generate(e: SubmitEvent) {
+	async function generate(e: SubmitEvent) {
 		e.preventDefault();
+		if (busy) return;
+		busy = true;
 		const seedNum = Number.parseInt(seedText, 10);
 		const choices: SetupChoices = {
 			style,
@@ -43,14 +55,17 @@
 			key,
 			timeSignature,
 			barsPerSection,
-			seed: Number.isFinite(seedNum) ? Math.abs(seedNum) : null
+			seed: Number.isFinite(seedNum) ? Math.abs(seedNum) : null,
+			useLibrary
 		};
-		const song = generateSong(choices);
+		const library = libraryOn ? await loadLibrary(style) : [];
+		const song = generateSong(choices, { library });
 		repo().save(song);
 		// Remember choices, but never pin a fixed seed by accident.
 		prefs.lastSetup = { ...choices, seed: null };
 		savePrefs();
-		goto(`/song/${song.id}`);
+		await goto(`/song/${song.id}`);
+		busy = false;
 	}
 </script>
 
@@ -97,6 +112,15 @@
 					{#if form !== 'blues12'}
 						<ChoiceGroup legend="Bars per section" name="bars" options={barOptions} bind:value={barsPerSection} columns={4} />
 					{/if}
+					{#if hasLibrary(style)}
+						<label class="check">
+							<input type="checkbox" bind:checked={useLibrary} aria-describedby="library-help" />
+							<span>
+								<span class="strong">Use the song library</span>
+								<span id="library-help" class="muted small">Start from a pre-written {STYLES[style].name} song instead of the rule-based generator.</span>
+							</span>
+						</label>
+					{/if}
 					<div class="field">
 						<label for="seed" class="strong">Seed</label>
 						<input id="seed" class="input" inputmode="numeric" pattern="[0-9]*" placeholder="Random" bind:value={seedText} aria-describedby="seed-help" />
@@ -110,7 +134,7 @@
 
 <div class="bottombar">
 	<div class="inner">
-		<button class="btn primary" type="submit" form="setup">Generate</button>
+		<button class="btn primary" type="submit" form="setup" disabled={busy}>Generate</button>
 	</div>
 </div>
 
@@ -199,6 +223,23 @@
 	}
 	.adv-body :global(fieldset) {
 		margin-bottom: 0;
+	}
+	.check {
+		display: flex;
+		align-items: flex-start;
+		gap: 10px;
+		margin-bottom: 20px;
+		cursor: pointer;
+	}
+	.check input {
+		flex: none;
+		width: 22px;
+		height: 22px;
+		margin-top: 2px;
+		accent-color: var(--accent);
+	}
+	.check .small {
+		display: block;
 	}
 	.small {
 		font-size: 0.875rem;

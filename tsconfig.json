@@ -10,6 +10,7 @@
 		"sourceMap": true,
 		"strict": true,
 		"noUncheckedIndexedAccess": false,
-		"moduleResolution": "bundler"
+		"moduleResolution": "bundler",
+		"allowImportingTsExtensions": true
 	}
 }

@@ -11,6 +11,7 @@ import {
 	type PoolEntry,
 	type StyleData
 } from './data';
+import { partBars, type LibrarySong } from './library-check';
 import { clampLevel, familyOf, parseDegree } from './theory';
 import type {
 	ChordSlot,
@@ -253,7 +254,10 @@ export function suggestNextLabel(labels: string[]): string {
 }
 
 export function formLabels(form: SetupChoices['form'], length: number): string[] {
-	if (form !== 'length') return [...(FORMS[form]?.sections ?? FORMS.vcvcbc.sections)];
+	if (form !== 'length') {
+		const sections = FORMS[form]?.sections;
+		return [...(sections?.length ? sections : FORMS.vcvcbc.sections)];
+	}
 	const n = Math.max(1, Math.min(16, Math.round(length)));
 	const labels: string[] = [];
 	const withIntro = n >= 6;
@@ -268,10 +272,11 @@ export function progressionKey(label: string): string {
 	return label.toLowerCase().replace(/[^a-z0-9]+/g, '-') || 'section';
 }
 
-function resolveSettings(choices: SetupChoices, rng: Rng, seed: number): SongSettings {
+function resolveSettings(choices: SetupChoices, rng: Rng, seed: number, entry: LibrarySong | null): SongSettings {
 	const mood = MOODS[choices.mood] ?? MOODS.happy;
 	const modes = Object.entries(mood.modes) as [Mode, number][];
-	const mode = rng.weighted(modes, ([, w]) => w)[0];
+	const drawn = rng.weighted(modes, ([, w]) => w)[0];
+	const mode = entry?.mode ?? drawn;
 	const tonality = tonalityOf(mode);
 	const key = choices.key === 'random' ? rng.pick(FRIENDLY_KEYS[tonality]) : choices.key;
 	const style = STYLES[choices.style] ?? STYLES.pop;
@@ -295,20 +300,40 @@ function songTitle(settings: SongSettings): string {
 	return `${mood} ${style} in ${settings.key}${tonalityOf(settings.mode) === 'minor' ? 'm' : ''}`;
 }
 
-export function generateSong(choices: SetupChoices, opts: { id?: string; now?: Date } = {}): Song {
+/** A library song that fits the choices, picked by seed, or null when none fits. */
+export function pickLibrarySong(songs: readonly LibrarySong[], choices: SetupChoices, seed: number): LibrarySong | null {
+	const modes = MOODS[choices.mood]?.modes ?? {};
+	const fit = songs.filter(
+		(s) => s.mood === choices.mood && s.complexity === choices.complexity && s.mode in modes
+	);
+	return fit.length ? createRng(hashSeed(seed, 'library')).pick(fit) : null;
+}
+
+export function generateSong(
+	choices: SetupChoices,
+	opts: { id?: string; now?: Date; library?: readonly LibrarySong[] } = {}
+): Song {
 	const seed = choices.seed ?? randomSeed();
 	const rng = createRng(seed);
-	const settings = resolveSettings(choices, rng, seed);
 	const form = FORMS[choices.form];
-	const labels = formLabels(choices.form, choices.length);
+	// Fixed patterns (12-bar blues) keep their own chords; every other form can take a library song.
+	const entry = choices.useLibrary !== false && opts.library && !form?.pattern ? pickLibrarySong(opts.library, choices, seed) : null;
+	const settings = resolveSettings(choices, rng, seed, entry);
+	const labels =
+		choices.form === 'library' ? [...(entry?.form ?? FORMS.vcvcbc.sections)] : formLabels(choices.form, choices.length);
 	const bars = form?.bars ?? choices.barsPerSection;
 	const ctx = contextOf(settings);
+	const tonality = tonalityOf(settings.mode);
 	const progressions: Record<string, Progression> = {};
 	const sections: Section[] = labels.map((label, i) => {
 		const pid = progressionKey(label);
 		const role = roleOf(label);
 		const sectionBars = (role === 'intro' || role === 'outro') && bars >= 8 && !form?.bars ? 4 : bars;
-		if (!progressions[pid]) {
+		const part = entry?.parts[role];
+		if (!progressions[pid] && part) {
+			const perBar = fitToBars(partBars(part), sectionBars, role, tonality);
+			progressions[pid] = buildProgression(pid, perBar, ctx, createRng(hashSeed(seed, pid)));
+		} else if (!progressions[pid]) {
 			progressions[pid] = generateProgression(pid, label, sectionBars, ctx, hashSeed(seed, pid), form?.pattern);
 		}
 		return { id: `s${i + 1}-${hashSeed(seed, `${pid}:${i}`).toString(36)}`, label, progressionId: pid, bars: sectionBars };
@@ -317,7 +342,7 @@ export function generateSong(choices: SetupChoices, opts: { id?: string; now?: D
 	return {
 		id: opts.id ?? newId(),
 		schemaVersion: 1,
-		title: songTitle(settings),
+		title: entry?.name ?? songTitle(settings),
 		createdAt: now,
 		updatedAt: now,
 		settings,

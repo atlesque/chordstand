@@ -5,5 +5,6 @@
   "vc2":    { "name": "Verse–Chorus ×2", "sections": ["Verse", "Chorus", "Verse", "Chorus"] },
   "vcvcbc": { "name": "Verse–Chorus–Bridge", "sections": ["Verse", "Chorus", "Verse", "Chorus", "Bridge", "Chorus"] },
   "blues12": { "name": "12-bar blues", "sections": ["A", "A", "A"], "bars": 12, "pattern": "blues12" },
-  "length": { "name": "Custom length", "sections": [] }
+  "length": { "name": "Custom length", "sections": [] },
+  "library": { "name": "From the library", "sections": [] }
 }

@@ -11,7 +11,8 @@ export const DEFAULT_SETUP: SetupChoices = {
 	key: 'random',
 	timeSignature: '4/4',
 	barsPerSection: 8,
-	seed: null
+	seed: null,
+	useLibrary: true
 };
 
 export function newId(): string {

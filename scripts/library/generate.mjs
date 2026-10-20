@@ -205,10 +205,12 @@ function plan() {
 	return requests;
 }
 
-// Always talk to the public API: some sandboxes point ANTHROPIC_BASE_URL elsewhere.
+// Always talk to the public API: some sandboxes point ANTHROPIC_BASE_URL elsewhere. Cloud sessions
+// reserve ANTHROPIC_API_KEY for Claude Code itself, so CHORDSTAND_ANTHROPIC_KEY works there instead.
 const client = () => {
-	if (!process.env.ANTHROPIC_API_KEY) fail('Set ANTHROPIC_API_KEY first.');
-	return new Anthropic({ baseURL: 'https://api.anthropic.com', apiKey: process.env.ANTHROPIC_API_KEY });
+	const apiKey = process.env.CHORDSTAND_ANTHROPIC_KEY || process.env.ANTHROPIC_API_KEY;
+	if (!apiKey) fail('Set CHORDSTAND_ANTHROPIC_KEY (or ANTHROPIC_API_KEY) first.');
+	return new Anthropic({ baseURL: 'https://api.anthropic.com', apiKey });
 };
 
 async function check() {

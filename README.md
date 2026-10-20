@@ -58,7 +58,7 @@ Drop a JSON file into `src/data/styles/`. Each pool entry has `degrees` (one Rom
 
 Each song stores its parts as degrees, bars separated by `|` and two chords in a bar separated by a space (`"I|vi|ii V|I"`). `src/lib/engine/library-check.ts` validates them, both when the library is built and in the unit tests.
 
-To (re)build it you need an Anthropic API key in `ANTHROPIC_API_KEY`:
+To (re)build it you need an Anthropic API key in `ANTHROPIC_API_KEY`, or in `CHORDSTAND_ANTHROPIC_KEY` in a Claude Code cloud environment, where `ANTHROPIC_API_KEY` is reserved:
 
 ```sh
 npm run library -- plan                  # request count and cost estimate, spends nothing

@@ -205,10 +205,11 @@ function plan() {
 	return requests;
 }
 
-// Always talk to the public API: some sandboxes point ANTHROPIC_BASE_URL elsewhere. Without
-// ANTHROPIC_API_KEY we assume an egress proxy injects the x-api-key header for api.anthropic.com.
-const client = () =>
-	new Anthropic({ baseURL: 'https://api.anthropic.com', apiKey: process.env.ANTHROPIC_API_KEY || 'injected-by-proxy' });
+// Always talk to the public API: some sandboxes point ANTHROPIC_BASE_URL elsewhere.
+const client = () => {
+	if (!process.env.ANTHROPIC_API_KEY) fail('Set ANTHROPIC_API_KEY first.');
+	return new Anthropic({ baseURL: 'https://api.anthropic.com', apiKey: process.env.ANTHROPIC_API_KEY });
+};
 
 async function check() {
 	const model = await client().models.retrieve(opts.model);

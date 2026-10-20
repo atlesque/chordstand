@@ -1,4 +1,3 @@
-import { inflateRawSync } from 'node:zlib';
 import { createSong, expect, expectAccessible, test } from './fixtures';
 
 type Entry = { id: string; at: number; song?: { id: string; title: string } };
@@ -13,9 +12,15 @@ test('sign in with Atlesque Play and sync the library @a11y', async ({ page, con
 	});
 	const fromPhone = { ...local, id: 'from-phone', title: 'From my phone' };
 	let server = { data: { v: 1, songs: 1, list: [{ id: fromPhone.id, at: Date.now(), song: fromPhone }] } as Record<string, unknown>, rev: 3 };
-	const puts: Entry[][] = [];
-	const decode = (data: { z?: string; list?: Entry[] }): Entry[] =>
-		data.z ? JSON.parse(inflateRawSync(Buffer.from(data.z, 'base64')).toString()) : data.list!;
+	const puts: { z?: string; list?: Entry[] }[] = [];
+	// Saves go up deflated; inflate them in the page, where DecompressionStream is.
+	const decode = (data: { z?: string; list?: Entry[] }) =>
+		page.evaluate(async (d): Promise<Entry[]> => {
+			if (!d.z) return d.list!;
+			const bytes = Uint8Array.from(atob(d.z), (c) => c.charCodeAt(0));
+			const out = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+			return JSON.parse(await new Response(out).text());
+		}, data);
 
 	await context.route('https://play.atlesque.dev/**', async (route) => {
 		const req = route.request();
@@ -39,7 +44,7 @@ test('sign in with Atlesque Play and sync the library @a11y', async ({ page, con
 			const body = req.postDataJSON();
 			if (body.rev !== server.rev) return route.fulfill({ status: 409, headers: cors, json: { error: 'conflict', ...server } });
 			server = { data: body.data, rev: server.rev + 1 };
-			puts.push(decode(body.data));
+			puts.push(body.data);
 			return route.fulfill({ headers: cors, json: { rev: server.rev } });
 		}
 		if (url.pathname === '/api/logout') return route.fulfill({ headers: cors, json: { ok: true } });
@@ -55,7 +60,7 @@ test('sign in with Atlesque Play and sync the library @a11y', async ({ page, con
 	await expect(page.getByRole('link', { name: /From my phone/ })).toBeVisible();
 	await expect(page.locator('.song')).toHaveCount(2);
 	await expect.poll(() => puts.length).toBe(1);
-	expect(puts[0].filter((e) => e.song).map((e) => e.id).sort()).toEqual([local.id, 'from-phone'].sort());
+	expect((await decode(puts[0])).filter((e) => e.song).map((e) => e.id).sort()).toEqual([local.id, 'from-phone'].sort());
 	expect(server.data.songs).toBe(2);
 	expect(new URL(page.url()).search).toBe('');
 	await expectAccessible(page);
@@ -66,7 +71,7 @@ test('sign in with Atlesque Play and sync the library @a11y', async ({ page, con
 	await page.getByRole('dialog', { name: 'Delete this song?' }).getByRole('button', { name: 'Delete' }).click();
 	await page.getByRole('button', { name: 'Sync now' }).click();
 	await expect.poll(() => puts.length).toBe(2);
-	expect(puts[1].find((e) => e.id === 'from-phone')?.song).toBeUndefined();
+	expect((await decode(puts[1])).find((e) => e.id === 'from-phone')?.song).toBeUndefined();
 	expect(server.data.songs).toBe(1);
 
 	// Signing out keeps the songs in this browser.

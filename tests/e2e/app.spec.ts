@@ -1,4 +1,4 @@
-import { createSong, expect, expectAccessible, test } from './fixtures';
+import { createSong, expect, expectAccessible, settle, test } from './fixtures';
 
 test('first song in three taps @a11y', async ({ page }) => {
 	await page.goto('/');
@@ -217,4 +217,45 @@ test('works offline after the first visit', async ({ page, context }) => {
 	await page.getByRole('button', { name: 'Generate' }).click();
 	await expect(page.locator('[data-section-index]')).toHaveCount(6);
 	await context.setOffline(false);
+});
+
+test('song library: search, filter, preview and add songs @a11y', async ({ page }) => {
+	await page.goto('/');
+	await page.getByRole('link', { name: 'Library', exact: true }).click();
+	await expect(page).toHaveURL(/\/library$/);
+	await expect(page.getByText(/^[\d,]+ songs$/)).toBeVisible();
+	await settle(page);
+	await expectAccessible(page);
+
+	// Filters and the query are kept in the URL.
+	await page.locator('summary', { hasText: 'Filters' }).click();
+	await page.getByRole('checkbox', { name: 'Jazz' }).check();
+	await page.getByRole('checkbox', { name: 'Calm' }).check();
+	await expect(page).toHaveURL(/style=jazz/);
+	await expect(page).toHaveURL(/mood=calm/);
+	await expectAccessible(page);
+	const first = page.locator('.item').first();
+	const name = (await first.locator('.title').innerText()).trim();
+	await page.getByRole('searchbox', { name: 'Search songs' }).fill(name.slice(0, 5));
+	await expect(page).toHaveURL(/q=/);
+	await expect(page.locator('.item mark').first()).toBeVisible();
+
+	// Preview a song, then add it and open it.
+	await page.locator('.item .head').first().click();
+	await expect(page.locator('.item .bar').first()).toBeVisible();
+	await expectAccessible(page);
+	await page.getByRole('button', { name: 'Use song' }).click();
+	await expect(page).toHaveURL(/\/song\/[\w-]+$/);
+	await expect(page.getByLabel('Song title')).not.toHaveValue('');
+
+	// Back on the list, pick two songs and add them together.
+	await page.goBack();
+	await expect(page).toHaveURL(/\/library\?.*style=jazz/);
+	await page.getByRole('searchbox', { name: 'Search songs' }).fill('');
+	await page.locator('.item .pick').nth(1).click();
+	await page.locator('.item .pick').nth(2).click();
+	await page.getByRole('button', { name: 'Add 2 songs' }).click();
+	await expect(page.getByRole('status')).toHaveText(/Added 2 songs to your songs/);
+	await page.goto('/');
+	await expect(page.locator('.song')).toHaveCount(3);
 });

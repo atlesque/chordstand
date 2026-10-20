@@ -141,7 +141,10 @@
 				<div class="orb" aria-hidden="true"></div>
 				<h2 class="display">Your first song is three taps away</h2>
 				<p class="muted">Pick a style, a mood and how rich the chords should be. Chordstand writes a full song structure you can rearrange and play from your music stand.</p>
-				<a class="btn primary" href="/new">Create a song</a>
+				<div class="empty-actions">
+					<a class="btn primary" href="/new">Create a song</a>
+					<a class="btn" href="/library">Browse the song library</a>
+				</div>
 			</section>
 		{:else}
 			<h2 class="list-title display">Your songs <span class="muted">({rows.length})</span></h2>
@@ -206,6 +209,7 @@
 
 <div class="bottombar">
 	<div class="inner">
+		<a class="btn" href="/library">Library</a>
 		<button id="new-song" class="btn primary" type="button" onclick={() => goto('/new')}><Icon name="plus" />New song</button>
 	</div>
 </div>
@@ -294,6 +298,12 @@
 	.empty p {
 		max-width: 34em;
 		margin: 0;
+	}
+	.empty-actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 8px;
 	}
 	.list-title {
 		font-size: 1.5rem;

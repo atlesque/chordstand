@@ -95,3 +95,16 @@ it('every shipped library file is valid', () => {
 		}
 	}
 });
+
+describe('using a song picked in the library view', () => {
+	it('builds the song from that entry, with its own form and title', async () => {
+		const { setupFromLibrary } = await import('$lib/engine/generator');
+		const entry = song({ id: 'pop-calm', mood: 'calm', complexity: 3, name: 'Slow River' });
+		const choices = setupFromLibrary(entry, 'pop', { ...DEFAULT_SETUP, timeSignature: '3/4' });
+		expect(choices).toMatchObject({ style: 'pop', mood: 'calm', complexity: 3, form: 'library', timeSignature: '3/4', seed: null });
+		const s = generateSong({ ...choices, seed: 3 }, { entry, id: 'x', now });
+		expect(s.title).toBe('Slow River');
+		expect(s.sections.map((x) => x.label)).toEqual(entry.form);
+		expect(degrees(s, 'verse')).toEqual(partBars(entry.parts.verse!));
+	});
+});

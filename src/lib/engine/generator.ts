@@ -311,13 +311,15 @@ export function pickLibrarySong(songs: readonly LibrarySong[], choices: SetupCho
 
 export function generateSong(
 	choices: SetupChoices,
-	opts: { id?: string; now?: Date; library?: readonly LibrarySong[] } = {}
+	opts: { id?: string; now?: Date; library?: readonly LibrarySong[]; entry?: LibrarySong } = {}
 ): Song {
 	const seed = choices.seed ?? randomSeed();
 	const rng = createRng(seed);
 	const form = FORMS[choices.form];
 	// Fixed patterns (12-bar blues) keep their own chords; every other form can take a library song.
-	const entry = choices.useLibrary !== false && opts.library && !form?.pattern ? pickLibrarySong(opts.library, choices, seed) : null;
+	// A song picked in the library view is used as is; otherwise one is drawn by seed.
+	const entry =
+		opts.entry ?? (choices.useLibrary !== false && opts.library && !form?.pattern ? pickLibrarySong(opts.library, choices, seed) : null);
 	const settings = resolveSettings(choices, rng, seed, entry);
 	const labels =
 		choices.form === 'library' ? [...(entry?.form ?? FORMS.vcvcbc.sections)] : formLabels(choices.form, choices.length);
@@ -349,6 +351,11 @@ export function generateSong(
 		progressions,
 		sections
 	};
+}
+
+/** Setup choices for turning a library song into a song, keeping the player's own time and bar settings. */
+export function setupFromLibrary(entry: LibrarySong, style: SetupChoices['style'], base: SetupChoices = DEFAULT_SETUP): SetupChoices {
+	return { ...base, style, mood: entry.mood, complexity: entry.complexity, form: 'library', key: 'random', seed: null, useLibrary: true };
 }
 
 export function setupFromSettings(settings: SongSettings, form: SetupChoices['form'] = 'vcvcbc'): SetupChoices {

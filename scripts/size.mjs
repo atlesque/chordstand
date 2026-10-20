@@ -36,13 +36,17 @@ while (queue.length) {
 	const src = readFileSync(join(build, clean), 'utf8');
 	for (const m of src.matchAll(/(?:from|import)\s*["']([^"']+\.js)["']/g)) queue.push(resolve(clean, m[1]));
 }
-// CSS chunks are referenced from the node files.
-const cssFiles = new Set();
+// CSS: what index.html links, plus the stylesheets the app entry preloads with the root layout
+// and the library page. The entry lists every route's CSS in one map, so read just those two nodes'
+// dependency lists rather than every .css it mentions.
+const cssFiles = new Set([...html.matchAll(/href="([^"]+\.css)"/g)].map((m) => m[1]));
 for (const p of seen) {
-	if (p.endsWith('.css')) cssFiles.add(p);
-	if (!p.endsWith('.js')) continue;
+	if (!p.includes('/entry/app.')) continue;
 	const src = readFileSync(join(build, p), 'utf8');
-	for (const m of src.matchAll(/["']([^"']*assets\/[^"']+\.css)["']/g)) cssFiles.add('/_app/immutable/' + m[1].replace(/^.*?assets\//, 'assets/'));
+	const deps = JSON.parse(src.match(/m\.f=(\[[^\]]*\])/)?.[1] ?? '[]');
+	for (const m of src.matchAll(/import\("\.\.\/nodes\/([02])\.[^"]+"\),__vite__mapDeps\(\[([\d,]+)\]\)/g)) {
+		for (const i of m[2].split(',')) if (deps[i]?.endsWith('.css')) cssFiles.add('/_app/immutable/' + deps[i].replace(/^\.\.\//, ''));
+	}
 }
 
 let js = 0;

@@ -1,6 +1,7 @@
 // Pre-generates the song library with the Claude Message Batches API (half price, runs offline).
 //
 //   npm run library -- plan                    # request count + cost estimate, spends nothing
+//   npm run library -- check                   # confirms the API key works, spends nothing
 //   npm run library -- submit --limit 3        # small pilot
 //   npm run library -- submit --confirm        # the full run (every style x mood x complexity)
 //   npm run library -- status [batch_id]       # progress of the last (or a given) batch
@@ -204,7 +205,15 @@ function plan() {
 	return requests;
 }
 
-const client = () => new Anthropic();
+// Always talk to the public API: some sandboxes point ANTHROPIC_BASE_URL elsewhere. Without
+// ANTHROPIC_API_KEY we assume an egress proxy injects the x-api-key header for api.anthropic.com.
+const client = () =>
+	new Anthropic({ baseURL: 'https://api.anthropic.com', apiKey: process.env.ANTHROPIC_API_KEY || 'injected-by-proxy' });
+
+async function check() {
+	const model = await client().models.retrieve(opts.model);
+	console.log(`Authenticated: ${model.id} is available.`);
+}
 
 async function submit() {
 	const requests = plan();
@@ -348,6 +357,6 @@ async function collect() {
 	if (thin.length) console.log(`\nCombos with fewer than 5 songs (${thin.length}):\n  ${thin.slice(0, 40).join('\n  ')}`);
 }
 
-const commands = { plan, submit, status, collect };
-if (!commands[command]) fail(`Unknown command ${command}. Use plan, submit, status or collect.`);
+const commands = { plan, check, submit, status, collect };
+if (!commands[command]) fail(`Unknown command ${command}. Use plan, check, submit, status or collect.`);
 await commands[command]();

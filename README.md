@@ -13,6 +13,7 @@ Pick a style, a mood and a complexity, tap **Generate**, and you get a full song
 - **Extend**: add any section or let it suggest what fits next; add an outro, repeat the chorus, or a key change up a semitone.
 - **Play view**: full-screen, high-contrast chord grid (chords ≥ 32 px). Tap the left/right half, swipe, or use the arrow keys to move between sections; optional auto-advance at the song's BPM; keeps the screen awake.
 - **Library**: autosaves every change, sorted by last edit; rename, duplicate, delete; export one or all songs as JSON and import them again; share a song as a link (the song is compressed into the URL hash, no server).
+- **Song library** (`/library`): browse the ~9,600 pre-generated songs with fuzzy search (titles, plus tags like "jazz" or "dreamy" and chords like "bVII", forgiving typos), filters for style, mood, complexity and mode, and a sort. Tap a song to preview its form and chords, then use it right away, or tick several and add them all at once. "Surprise me" picks one from the current results. Filters and the search live in the URL.
 - **Sync (optional)**: sign in with your Atlesque account (Atlesque Play, email link, no password) and your library is kept on the account and merged with your other devices.
 - **Offline PWA**: installable, works offline after the first visit.
 - Optional Roman numerals under each chord; light, dark and system themes.

@@ -78,6 +78,7 @@
 			<p class="eyebrow">Compose</p>
 			<h1>New song</h1>
 		</div>
+		<a class="btn ghost" href="/library">Library</a>
 	</header>
 
 	<main id="main">

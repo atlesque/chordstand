@@ -23,3 +23,8 @@ export async function loadLibrary(style: StyleId): Promise<LibrarySong[]> {
 		return [];
 	}
 }
+
+/** Styles that ship a library file. */
+export function libraryStyles(): StyleId[] {
+	return Object.keys(files).map((p) => p.split('/').pop()!.replace('.json', '') as StyleId);
+}

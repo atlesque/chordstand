@@ -12,11 +12,12 @@ const hashes = [...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/scrip
 
 const csp = [
 	"default-src 'self'",
-	`script-src 'self' ${hashes.join(' ')}`.trim(),
+	// tools.atlesque.dev: the shared analytics consent banner; it loads Cloudflare Web Analytics only after opt-in.
+	`script-src 'self' https://tools.atlesque.dev https://static.cloudflareinsights.com ${hashes.join(' ')}`.trim(),
 	"style-src 'self' 'unsafe-inline'",
 	"img-src 'self' data: blob:",
 	"font-src 'self'",
-	"connect-src 'self' https://play.atlesque.dev", // Atlesque Play: sign-in and song sync
+	"connect-src 'self' https://play.atlesque.dev https://cloudflareinsights.com", // Atlesque Play: sign-in and song sync; Web Analytics beacon
 	"manifest-src 'self'",
 	"worker-src 'self'",
 	"object-src 'none'",

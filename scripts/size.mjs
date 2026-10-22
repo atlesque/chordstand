@@ -9,7 +9,10 @@ const build = 'build';
 const html = readFileSync(join(build, 'index.html'), 'utf8');
 
 const seen = new Set();
-const queue = [...html.matchAll(/(?:href|src|import\()\s*=?\s*["']([^"']+\.(?:js|css))["']/g)].map((m) => m[1]);
+// External scripts (the shared consent banner on tools.atlesque.dev) aren't part of this app's bundle.
+const queue = [...html.matchAll(/(?:href|src|import\()\s*=?\s*["']([^"']+\.(?:js|css))["']/g)]
+	.map((m) => m[1])
+	.filter((p) => !/^https?:\/\//.test(p));
 // The SPA bootstrap imports the start + app entries; they in turn import the root layout and
 // the library page. Follow static imports to get the real first-load graph.
 const resolve = (from, spec) => (spec.startsWith('.') ? new URL(spec, 'http://x' + from).pathname : spec);

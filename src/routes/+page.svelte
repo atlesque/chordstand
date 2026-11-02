@@ -212,6 +212,9 @@
 				<input bind:this={fileInput} class="visually-hidden" type="file" accept="application/json,.json" onchange={importFile} tabindex="-1" aria-hidden="true" />
 			</div>
 		</section>
+		<!-- The shared consent script opens its settings from any [data-privacy-settings] element.
+		     Its own floating button is turned off in app.html: it sat on top of the Library button. -->
+		<p class="privacy"><button class="link muted small" type="button" data-privacy-settings>Privacy settings</button></p>
 	</main>
 </div>
 
@@ -415,5 +418,18 @@
 		display: flex;
 		gap: 8px;
 		flex-wrap: wrap;
+	}
+	.privacy {
+		margin: 24px 0 0;
+	}
+	.link {
+		font: inherit;
+		background: none;
+		border: 0;
+		padding: 12px 0;
+		color: var(--muted);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+		cursor: pointer;
 	}
 </style>

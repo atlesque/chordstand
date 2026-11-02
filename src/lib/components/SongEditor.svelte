@@ -4,7 +4,7 @@
 	import BlockCard, { type BlockAction } from './BlockCard.svelte';
 	import ChordSheet from './ChordSheet.svelte';
 	import LevelStepper from './LevelStepper.svelte';
-	import ThemeToggle from './ThemeToggle.svelte';
+	import AppMenu from './AppMenu.svelte';
 	import { EditorState } from '$lib/state/editor.svelte';
 	import { announce, INSTRUMENT_NAMES, prefs, savePrefs, showToast } from '$lib/state/app.svelte';
 	import {
@@ -243,7 +243,7 @@
 		<button class="btn icon ghost" type="button" disabled={!editor.canRedo} onclick={() => editor.redo() && announce('Redone')} aria-label="Redo">
 			<Icon name="redo" />
 		</button>
-		<ThemeToggle />
+		<AppMenu />
 	</header>
 
 	<main id="main">

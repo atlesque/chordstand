@@ -2,7 +2,7 @@
 	import type { Component } from 'svelte';
 	import { goto } from '$app/navigation';
 	import Icon from '$lib/components/Icon.svelte';
-	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
+	import AppMenu from '$lib/components/AppMenu.svelte';
 	import ConfirmDialog from '$lib/components/ConfirmDialog.svelte';
 	import { announce, repo, showToast } from '$lib/state/app.svelte';
 	import { duplicateSong, setTitle } from '$lib/engine/meta';
@@ -127,7 +127,7 @@
 				><path d="M2 8c14-8 26-8 38 0s24 8 38 0 26-8 38 0 24 8 38 0 26-8 38 0" pathLength="1" /></svg
 			>
 		</div>
-		<ThemeToggle />
+		<AppMenu />
 	</header>
 
 	<main id="main">
@@ -212,9 +212,6 @@
 				<input bind:this={fileInput} class="visually-hidden" type="file" accept="application/json,.json" onchange={importFile} tabindex="-1" aria-hidden="true" />
 			</div>
 		</section>
-		<!-- The shared consent script opens its settings from any [data-privacy-settings] element.
-		     Its own floating button is turned off in app.html: it sat on top of the Library button. -->
-		<p class="privacy"><button class="link muted small" type="button" data-privacy-settings>Privacy settings</button></p>
 	</main>
 </div>
 
@@ -418,18 +415,5 @@
 		display: flex;
 		gap: 8px;
 		flex-wrap: wrap;
-	}
-	.privacy {
-		margin: 24px 0 0;
-	}
-	.link {
-		font: inherit;
-		background: none;
-		border: 0;
-		padding: 12px 0;
-		color: var(--muted);
-		text-decoration: underline;
-		text-underline-offset: 3px;
-		cursor: pointer;
 	}
 </style>

@@ -193,6 +193,25 @@ test('share link opens and saves to the library', async ({ page, context }) => {
 	await expect(page.locator('.song')).toHaveCount(1);
 });
 
+test('app menu: theme, song library and privacy settings @a11y', async ({ page }) => {
+	await page.goto('/');
+	await page.getByRole('button', { name: 'Menu' }).click();
+	const menu = page.locator('[popover]');
+	await expect(menu).toBeVisible();
+	await expect(menu.getByRole('button', { name: 'Privacy settings' })).toHaveAttribute('data-privacy-settings', '');
+	await expectAccessible(page);
+
+	await menu.getByRole('button', { name: 'Dark' }).click();
+	await expect(menu.getByRole('button', { name: 'Dark' })).toHaveAttribute('aria-pressed', 'true');
+	await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+	await page.keyboard.press('Escape');
+	await expect(menu).toBeHidden();
+
+	await page.getByRole('button', { name: 'Menu' }).click();
+	await page.getByRole('link', { name: 'Song library', exact: true }).click();
+	await expect(page.getByRole('heading', { name: 'Song library' })).toBeVisible();
+});
+
 test('export and import a library file', async ({ page }) => {
 	await createSong(page);
 	await page.goto('/');
